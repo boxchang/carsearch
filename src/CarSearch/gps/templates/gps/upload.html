@@ -1,14 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'bases/base.html' %}
+{% block title %}
+    上傳定位
+{% endblock %}
+{% block container %}
+    上傳定位 gps/upload.html
     <form action="" method="post" class="form-group font-weight-bold align-middle" id="car_form" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="btn btn-primary" id="send">Upload</button>
     </form>
-</body>
-</html>
+{% endblock container %}

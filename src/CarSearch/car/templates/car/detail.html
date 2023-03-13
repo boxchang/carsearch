@@ -1,0 +1,43 @@
+{% extends 'bases/base.html' %}
+{% block title %}
+    車輛資料
+{% endblock %}
+{% block container %}
+    <fieldset>
+        <legend>車輛資料</legend>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-2 p-2" style="text-align:right;">狀態：</div>
+                    <div class="col-10 p-2 content">{{ asset.status }}</div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-2 p-2" style="text-align:right;">資產類別：</div>
+                    <div class="col-2 p-2 content">{{ asset.category }}</div>
+                    <div class="col-2 p-2" style="text-align:right;">資產編號：</div>
+                    <div class="col-2 p-2 content">{{ asset.asset_no }}</div>
+                    <div class="col-2 p-2" style="text-align:right;">自動編碼：</div>
+                    <div class="col-2 p-2 content">{{ asset.auto_encode }}</div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-2 p-2" style="text-align:right;">資產種類：</div>
+                    <div class="col-2 p-2 content">{{ asset.type }}</div>
+                    <div class="col-2 p-2" style="text-align:right;">品牌：</div>
+                    <div class="col-2 p-2 content">{{ asset.brand }}</div>
+                    <div class="col-2 p-2" style="text-align:right;">型號：</div>
+                    <div class="col-2 p-2 content">{{ asset.model }}</div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-2 p-2" style="text-align:right;">描述：</div>
+                    <div class="col-10 p-2 content">{{ asset.desc }}</div>
+                </div>
+            </li>
+        </ul>
+    </fieldset>
+{% endblock container %}

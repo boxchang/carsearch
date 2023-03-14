@@ -35,10 +35,10 @@ class FileJob(models.Model):
     status = models.ForeignKey(
         JobStatus, related_name='job_status', on_delete=models.DO_NOTHING)
     count = models.IntegerField()
-    success = models.IntegerField()
+    success = models.IntegerField(default=0)
     start_time = models.CharField(max_length=50, blank=True)
     end_time = models.CharField(max_length=50, blank=True)
-    exe_time = models.IntegerField()
+    exe_time = models.IntegerField(null=True)
     create_at = models.DateTimeField(auto_now_add=True, editable=True)  # 建立日期
     create_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING,
                                   related_name='job_create_by')  # 建立者

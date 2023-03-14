@@ -4,29 +4,12 @@ import os
 import uuid
 from django.core.paginator import Paginator
 from CarSearch.settings.base import MEDIA_ROOT
+from bases.utils import FileUploadJob
 from car.forms import FileUploadForm
 from car.models import Car
 from jobs.models import FileJob, JobStatus
 import dbfread
 from django.urls import reverse
-
-def handle_uploaded_file(file):
-    ext = file.name.split('.')[-1]
-    file_name = '{}.{}'.format(uuid.uuid4().hex[:10], ext)
-
-    # file path relative to 'media' folder
-    file_path = os.path.join('files', file_name)
-    absolute_file_path = os.path.join('media', 'files', file_name)
-
-    directory = os.path.dirname(absolute_file_path)
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-
-    with open(absolute_file_path, 'wb+') as destination:
-        for chunk in file.chunks():
-            destination.write(chunk)
-
-    return file_path
 
 
 def upload(request):
@@ -37,7 +20,8 @@ def upload(request):
             raw_file = form.cleaned_data.get("file")
             fileJob = FileJob()
             fileJob.file_type = "CAR"
-            file_path = handle_uploaded_file(raw_file)
+            batch_no, file_path = FileUploadJob().handle_uploaded_file(raw_file)
+            fileJob.batch_no = batch_no
             fileJob.file = file_path
             table = dbfread.DBF(MEDIA_ROOT+file_path)
             fileJob.count = len(table)
@@ -88,23 +72,7 @@ def search(request):
     return render(request, 'car/search.html', locals())
 
 
-def detail(request):
-    if request.method == 'POST':
-        form = FileUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            # get cleaned data
-            raw_file = form.cleaned_data.get("file")
-            fileJob = FileJob()
-            fileJob.file_type = "CAR"
-            file_path = handle_uploaded_file(raw_file)
-            fileJob.file = file_path
-            table = dbfread.DBF(MEDIA_ROOT+file_path)
-            fileJob.count = len(table)
-            fileJob.status = JobStatus.objects.get(id=1)  # WAIT
-            fileJob.create_by = User.objects.get(id=1)
-            fileJob.save()
-            return redirect(reverse('car_detail'))
-    else:
-        form = FileUploadForm()
+def detail(request, pk):
+    car = Car.objects.get(pk=pk)
 
-    return render(request, 'car/upload.html', locals())
+    return render(request, 'car/detail.html', locals())

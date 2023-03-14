@@ -16,7 +16,7 @@
         <tbody>
             {% for car in page_results %}
                 <tr>
-                    <td><a href="#">{{ car.CARNO }}</a></td>
+                    <td><a href="{% url 'car_detail' pk=car.pk %}">{{ car.CARNO }}</a></td>
                     <td>{{ car.CARTYPE }}</td>
                     <td>{{ car.CARCOLOR }}</td>
                     <td>{{ car.FINDMODE }}</td>

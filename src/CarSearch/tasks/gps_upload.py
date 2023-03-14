@@ -1,19 +1,14 @@
 import dbfread
 from datetime import datetime
-
 from CarSearch.settings.base import MEDIA_ROOT
 from bases.database import database
-from bases.views import Cursor2Dict
+from bases.utils import Cursor2Dict, FileUploadJob
 
 
-
-class CarSearch(object):
+class GPS_Upload(object):
     start_time = ""
     end_time = ""
 
-    def __init__(self):
-        db = database()
-        self.conn = db.create_connection()
 
     def log(self, msg):
         now = datetime.now()
@@ -69,39 +64,21 @@ class CarSearch(object):
             UPDATE_2=record['UPDATE_2'])
         db.execute_sql(sql)
 
-    def filejob_start_update(self, batch_no, status_id, count):
-        now = datetime.now()
-        self.start_time = datetime.strftime(now, '%Y-%m-%d %H:%M:%S')
-        db = database()
-        sql = """update jobs_filejob set status_id = '{status_id}', success={count}, start_time='{start_time}' where batch_no = '{batch_no}'""".format(
-            status_id=status_id, count=count, batch_no=batch_no, start_time=self.start_time
-        )
-        db.execute_sql(sql)
-
-
-    def filejob_end_update(self, batch_no, status_id, count):
-        now = datetime.now()
-        start_time = datetime.strptime(self.start_time, '%Y-%m-%d %H:%M:%S')
-        exe_time = now - start_time
-        self.end_time = datetime.strftime(now, '%Y-%m-%d %H:%M:%S')
-        db = database()
-        sql = """update jobs_filejob set status_id = '{status_id}', success={count}, end_time='{end_time}', exe_time={exe_time} where batch_no = '{batch_no}'""".format(
-            status_id=status_id, count=count, batch_no=batch_no, end_time=self.end_time, exe_time=exe_time.seconds
-        )
-        db.execute_sql(sql)
-
 
     def execute(self):
+        upload = FileUploadJob()
+        db = database()
+        conn = db.create_connection()
         sql = """select * from jobs_filejob where status_id='1' and file_type='GPS'"""
-        rows = Cursor2Dict(self.conn, sql)
+        rows = Cursor2Dict(conn, sql)
         for row in rows:
             file_name = row['file']
             batch_no = row['batch_no']
-            self.filejob_start_update(batch_no, '2', 0)  # ON-Going
             file_path = MEDIA_ROOT + file_name
+            upload.filejob_start_update(batch_no, '2', 0)  # ON-Going
             count = self.insertDbfFile(batch_no, file_path)
-            self.filejob_end_update(batch_no, '3', count)  # DONE
+            upload.filejob_end_update(batch_no, '3', count)  # DONE
 
 
-obj = CarSearch()
+obj = GPS_Upload()
 obj.execute()

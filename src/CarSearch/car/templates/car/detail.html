@@ -8,34 +8,134 @@
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
                 <div class="row">
+                    <div class="col-2 p-2" style="text-align:right;">車號：</div>
+                    <div class="col-2 p-2 content">{{ car.CARNO }}</div>
                     <div class="col-2 p-2" style="text-align:right;">狀態：</div>
-                    <div class="col-10 p-2 content">{{ asset.status }}</div>
+                    <div class="col-2 p-2 content">{{ car.FINDMODE }}</div>
                 </div>
             </li>
             <li class="list-group-item">
                 <div class="row">
-                    <div class="col-2 p-2" style="text-align:right;">資產類別：</div>
-                    <div class="col-2 p-2 content">{{ asset.category }}</div>
-                    <div class="col-2 p-2" style="text-align:right;">資產編號：</div>
-                    <div class="col-2 p-2 content">{{ asset.asset_no }}</div>
-                    <div class="col-2 p-2" style="text-align:right;">自動編碼：</div>
-                    <div class="col-2 p-2 content">{{ asset.auto_encode }}</div>
+                    <div class="col-2 p-2" style="text-align:right;">廠牌型式：</div>
+                    <div class="col-2 p-2 content">{{ car.CARTYPE }}</div>
+                    <div class="col-2 p-2" style="text-align:right;">顏色：</div>
+                    <div class="col-2 p-2 content">{{ car.CARCOLOR }}</div>
+                    <div class="col-2 p-2" style="text-align:right;">年份：</div>
+                    <div class="col-2 p-2 content">{{ car.CARAGE }}</div>
                 </div>
             </li>
             <li class="list-group-item">
                 <div class="row">
-                    <div class="col-2 p-2" style="text-align:right;">資產種類：</div>
-                    <div class="col-2 p-2 content">{{ asset.type }}</div>
-                    <div class="col-2 p-2" style="text-align:right;">品牌：</div>
-                    <div class="col-2 p-2 content">{{ asset.brand }}</div>
-                    <div class="col-2 p-2" style="text-align:right;">型號：</div>
-                    <div class="col-2 p-2 content">{{ asset.model }}</div>
+                    <div class="col-2 p-2" style="text-align:right;">單位：</div>
+                    <div class="col-2 p-2 content">{{ car.COMPANY }}</div>
                 </div>
             </li>
             <li class="list-group-item">
                 <div class="row">
-                    <div class="col-2 p-2" style="text-align:right;">描述：</div>
-                    <div class="col-10 p-2 content">{{ asset.desc }}</div>
+                    <div class="col-2 p-2" style="text-align:right;">帳號：</div>
+                    <div class="col-2 p-2 content">{{ car.ACCNO }}</div>
+                    <div class="col-2 p-2" style="text-align:right;">等級：</div>
+                    <div class="col-2 p-2 content">{{ car.GRADE }}</div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-2 p-2" style="text-align:right;">承辦人：</div>
+                    <div class="col-2 p-2 content">{{ car.COMPMAN }}</div>
+                    <div class="col-2 p-2" style="text-align:right;">記號：</div>
+                    <div class="col-2 p-2 content">{{ car.COMPANY2 }}</div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-2 p-2" style="text-align:right;">案件編號：</div>
+                    <div class="col-2 p-2 content">{{ car.CASENO }}</div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-2 p-2" style="text-align:right;">建檔日期：</div>
+                    <div class="col-2 p-2 content">{{ car.CDATE }}</div>
+                    <div class="col-2 p-2" style="text-align:right;">異動日期：</div>
+                    <div class="col-2 p-2 content">{{ car.CHGDATE }}</div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-2 p-2" style="text-align:right;">主保1：</div>
+                    <div class="col-2 p-2 content">{{ car.OTH1 }}</div>
+                    <div class="col-2 p-2" style="text-align:right;">主保2：</div>
+                    <div class="col-2 p-2 content">{{ car.OTH2 }}</div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-2 p-2" style="text-align:right;">主保3：</div>
+                    <div class="col-2 p-2 content">{{ car.OTH3 }}</div>
+                    <div class="col-2 p-2" style="text-align:right;">主保4：</div>
+                    <div class="col-2 p-2 content">{{ car.OTH4 }}</div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-2 p-2" style="text-align:right;">電話1：</div>
+                    <div class="col-2 p-2 content">{{ car.TEL1 }}</div>
+                    <div class="col-2 p-2" style="text-align:right;">電話2：</div>
+                    <div class="col-2 p-2 content">{{ car.TEL2 }}</div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-2 p-2" style="text-align:right;">電話3：</div>
+                    <div class="col-2 p-2 content">{{ car.TEL3 }}</div>
+                    <div class="col-2 p-2" style="text-align:right;">電話4：</div>
+                    <div class="col-2 p-2 content">{{ car.TEL4 }}</div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-2 p-2" style="text-align:right;">地址1：</div>
+                    <div class="col-10 p-2 content">{{ car.ADDR1 }}</div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-2 p-2" style="text-align:right;">地址2：</div>
+                    <div class="col-10 p-2 content">{{ car.ADDR2 }}</div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-2 p-2" style="text-align:right;">地址3：</div>
+                    <div class="col-10 p-2 content">{{ car.ADDR3 }}</div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-2 p-2" style="text-align:right;">地址4：</div>
+                    <div class="col-10 p-2 content">{{ car.ADDR4 }}</div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-2 p-2" style="text-align:right;">證號：</div>
+                    <div class="col-2 p-2 content">{{ car.CID }}</div>
+                    <div class="col-2 p-2" style="text-align:right;">債權：</div>
+                    <div class="col-2 p-2 content">{{ car.DEBIT }}</div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-2 p-2" style="text-align:right;">異動紀錄：</div>
+                    <div class="col-2 p-2 content">{{ car.CHGDATE }}</div>
+                    <div class="col-2 p-2" style="text-align:right;">動保迄日：</div>
+                    <div class="col-2 p-2 content">{{ car.ENDDATE }}</div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-2 p-2" style="text-align:right;">備註2：</div>
+                    <div class="col-10 p-2 content">{{ car.NOTE2 }}</div>
                 </div>
             </li>
         </ul>

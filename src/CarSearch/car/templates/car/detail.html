@@ -2,8 +2,25 @@
 {% block title %}
     車輛資料
 {% endblock %}
+{% block css %}
+
+{% endblock css %}
+{% block js %}
+
+{% endblock js %}
 {% block container %}
-    <fieldset>
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="car-tab" data-bs-toggle="tab" data-bs-target="#car-tab-pane" type="button" role="tab" aria-controls="car-tab-pane" aria-selected="true">車輛資料</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="gps-tab" data-bs-toggle="tab" data-bs-target="#gps-tab-pane" type="button" role="tab" aria-controls="gps-tab-pane" aria-selected="false">定位紀錄</button>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="car-tab-pane" role="tabpanel" aria-labelledby="car-tab" tabindex="0">
+      <fieldset>
         <legend>車輛資料</legend>
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
@@ -140,4 +157,164 @@
             </li>
         </ul>
     </fieldset>
+  </div>
+  <div class="tab-pane fade" id="gps-tab-pane" role="tabpanel" aria-labelledby="gps-tab" tabindex="0">
+      <div id="accordion">
+          <div class="card">
+            <div class="card-header" id="headingOne">
+              <h5 class="mb-0">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Collapsible Group Item #1
+                </button>
+              </h5>
+            </div>
+
+            <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+              <div class="card-body">
+                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header" id="headingTwo">
+              <h5 class="mb-0">
+                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                  Collapsible Group Item #2
+                </button>
+              </h5>
+            </div>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+              <div class="card-body">
+                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header" id="headingThree">
+              <h5 class="mb-0">
+                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                  Collapsible Group Item #3
+                </button>
+              </h5>
+            </div>
+            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+              <div class="card-body">
+                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="accordion">
+            <div class="card">
+                <div class="card-header" id="heading_0" data-toggle="collapse" data-target="#collapse_0" aria-expanded="true" aria-controls="collapse_0">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" onclick="return false;">
+                            2023-02-06 15:09:00
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapse_0" class="collapse" aria-labelledby="heading_0" data-parent="#accordion">
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="addr_2">單位</label>
+                                <input type="text" id="addr_2" class="form-control" value="" readonly="">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="gps_2a">經度</label>
+                                <input type="text" id="gps_2a" class="form-control" value="22.587805" readonly="">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="gps_2b">緯度</label>
+                                <input type="text" id="gps_2b" class="form-control" value="120.32683333333" readonly="">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="sales_2">人員</label>
+                                <input type="text" id="sales_2" class="form-control" value="SIM2" readonly="">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="bingo_2">備註</label>
+                                <input type="text" id="bingo_2" class="form-control" value="" readonly="">
+                            </div>
+
+                            <div id="map-container-google-1" class="z-depth-1-half map-container" style="height: 500px">
+                                <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBcSG2Ts8xg39fyK9aO01AVH1d9N_AIhzg&amp;q=22.587805,120.32683333333" frameborder="0" style="border:0" allowfullscreen=""></iframe>
+                                <!-- <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBcSG2Ts8xg39fyK9aO01AVH1d9N_AIhzg&q=22.7324363,120.3089536" frameborder="0"
+                                style="border:0" allowfullscreen></iframe> -->
+
+
+                                <!-- <iframe src="https://maps.google.com/maps?q=manhatan&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0"
+                                style="border:0" allowfullscreen></iframe> -->
+                            </div>
+
+
+                            <div class="form-group">
+                                ​<div id="demo_0" class="carousel slide" data-ride="carousel">
+                                                                                                            </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="heading_1" data-toggle="collapse" data-target="#collapse_1" aria-expanded="true" aria-controls="collapse_1">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" onclick="return false;">
+                            2022-08-19 11:30:00
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapse_1" class="collapse" aria-labelledby="heading_1" data-parent="#accordion">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="addr_2">單位</label>
+                            <input type="text" id="addr_2" class="form-control" value="" readonly="">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="gps_2a">經度</label>
+                            <input type="text" id="gps_2a" class="form-control" value="23.101218333333" readonly="">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="gps_2b">緯度</label>
+                            <input type="text" id="gps_2b" class="form-control" value="120.16" readonly="">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sales_2">人員</label>
+                            <input type="text" id="sales_2" class="form-control" value="阿嘉" readonly="">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="bingo_2">備註</label>
+                            <input type="text" id="bingo_2" class="form-control" value="" readonly="">
+                        </div>
+
+                        <div id="map-container-google-1" class="z-depth-1-half map-container" style="height: 500px">
+                            <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBcSG2Ts8xg39fyK9aO01AVH1d9N_AIhzg&amp;q=23.101218333333,120.16" frameborder="0" style="border:0" allowfullscreen=""></iframe>
+                            <!-- <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBcSG2Ts8xg39fyK9aO01AVH1d9N_AIhzg&q=22.7324363,120.3089536" frameborder="0"
+                            style="border:0" allowfullscreen></iframe> -->
+
+
+                            <!-- <iframe src="https://maps.google.com/maps?q=manhatan&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0"
+                            style="border:0" allowfullscreen></iframe> -->
+                        </div>
+
+
+                        <div class="form-group">
+                            ​<div id="demo_1" class="carousel slide" data-ride="carousel">
+                                                                                                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+  </div>
+</div>
 {% endblock container %}

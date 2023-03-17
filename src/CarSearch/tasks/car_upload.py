@@ -21,7 +21,7 @@ class CAR_Upload(object):
         db = database()
         table = dbfread.DBF(filename, load=True, char_decode_errors='ignore')
 
-        count = 1
+        count = 0
 
         fields = table.field_names
         db_fields = []

@@ -3,14 +3,35 @@
     車輛資料
 {% endblock %}
 {% block css %}
+<style>
+    .map-container {
+        overflow: hidden;
+        position: relative;
+    }
 
+    .map-container iframe {
+        left:0;
+        top:0;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+</style>
 {% endblock css %}
+
 {% block js %}
 
 {% endblock js %}
 {% block container %}
 
 <ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li>
+    <a href="javascript:history.back()" class="btn btn-light"><i class="fas fa-arrow-left fa-1x"></i></a>
+  </li>
   <li class="nav-item" role="presentation">
     <button class="nav-link active" id="car-tab" data-bs-toggle="tab" data-bs-target="#car-tab-pane" type="button" role="tab" aria-controls="car-tab-pane" aria-selected="true">車輛資料</button>
   </li>
@@ -26,7 +47,7 @@
                     <div class="col-2 p-2" style="text-align:right;">車號：</div>
                     <div class="col-2 p-2 content">{{ car.CARNO }}</div>
                     <div class="col-2 p-2" style="text-align:right;">狀態：</div>
-                    <div class="col-2 p-2 content">{{ car.FINDMODE }}</div>
+                    <div class="col-2 p-2 content"><span style="color: #{{ color }};">{{ car.FINDMODE }}</span></div>
                 </div>
             </li>
             <li class="list-group-item">
@@ -156,48 +177,43 @@
         </ul>
   </div>
   <div class="tab-pane fade" id="gps-tab-pane" role="tabpanel" aria-labelledby="gps-tab" tabindex="0">
-      <div class="accordion" id="accordionExample">
+      <div class="accordion" id="accordion">
+      {% for gps in gpss %}
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingOne">
-              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                2022-08-19 11:30:00
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ gps.id }}" aria-expanded="false" aria-controls="collapse{{ gps.id }}">
+                {{ gps.create_at }}
               </button>
             </h2>
-            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+            <div id="collapse{{ gps.id }}" class="accordion-collapse collapse" aria-labelledby="heading" data-bs-parent="#accordion">
                 <div class="accordion-body">
                     <div class="form-group">
                         <label for="addr_2">單位</label>
-                        <input type="text" id="addr_2" class="form-control" value="" readonly="">
+                        <input type="text" id="addr_2" class="form-control" value="{{ gps.ADDR_2 }}" readonly="">
                     </div>
 
                     <div class="form-group">
                         <label for="gps_2a">經度</label>
-                        <input type="text" id="gps_2a" class="form-control" value="23.101218333333" readonly="">
+                        <input type="text" id="gps_2a" class="form-control" value="{{ gps.GPS_2A }}" readonly="">
                     </div>
 
                     <div class="form-group">
                         <label for="gps_2b">緯度</label>
-                        <input type="text" id="gps_2b" class="form-control" value="120.16" readonly="">
+                        <input type="text" id="gps_2b" class="form-control" value="{{ gps.GPS_2B }}" readonly="">
                     </div>
 
                     <div class="form-group">
                         <label for="sales_2">人員</label>
-                        <input type="text" id="sales_2" class="form-control" value="阿嘉" readonly="">
+                        <input type="text" id="sales_2" class="form-control" value="{{ gps.SALES_2 }}" readonly="">
                     </div>
 
                     <div class="form-group">
                         <label for="bingo_2">備註</label>
-                        <input type="text" id="bingo_2" class="form-control" value="" readonly="">
+                        <input type="text" id="bingo_2" class="form-control" value="{{ gps.BINGO_2 }}" readonly="">
                     </div>
 
-                    <div id="map-container-google-1" class="z-depth-1-half map-container" style="height: 500px">
-                        <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBcSG2Ts8xg39fyK9aO01AVH1d9N_AIhzg&amp;q=23.101218333333,120.16" frameborder="0" style="border:0" allowfullscreen=""></iframe>
-                        <!-- <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBcSG2Ts8xg39fyK9aO01AVH1d9N_AIhzg&q=22.7324363,120.3089536" frameborder="0"
-                        style="border:0" allowfullscreen></iframe> -->
-
-
-                        <!-- <iframe src="https://maps.google.com/maps?q=manhatan&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0"
-                        style="border:0" allowfullscreen></iframe> -->
+                    <div id="map-container-google-1" class="map-container" style="height: 500px">
+                        <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBcSG2Ts8xg39fyK9aO01AVH1d9N_AIhzg&amp;q={{ gps.GPS_2A }},{{ gps.GPS_2B }}" frameborder="0" style="border:0" allowfullscreen></iframe>
                     </div>
 
 
@@ -207,60 +223,7 @@
                 </div>
             </div>
           </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="headingTwo">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                2023-02-06 15:09:00
-              </button>
-            </h2>
-            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                    <form>
-                        <div class="form-group">
-                            <label for="addr_2">單位</label>
-                            <input type="text" id="addr_2" class="form-control" value="" readonly="">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="gps_2a">經度</label>
-                            <input type="text" id="gps_2a" class="form-control" value="22.587805" readonly="">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="gps_2b">緯度</label>
-                            <input type="text" id="gps_2b" class="form-control" value="120.32683333333" readonly="">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="sales_2">人員</label>
-                            <input type="text" id="sales_2" class="form-control" value="SIM2" readonly="">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="bingo_2">備註</label>
-                            <input type="text" id="bingo_2" class="form-control" value="" readonly="">
-                        </div>
-
-                        <div id="map-container-google-1" class="z-depth-1-half map-container" style="height: 500px">
-                            <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBcSG2Ts8xg39fyK9aO01AVH1d9N_AIhzg&amp;q=22.587805,120.32683333333" frameborder="0" style="border:0" allowfullscreen=""></iframe>
-                            <!-- <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBcSG2Ts8xg39fyK9aO01AVH1d9N_AIhzg&q=22.7324363,120.3089536" frameborder="0"
-                            style="border:0" allowfullscreen></iframe> -->
-
-
-                            <!-- <iframe src="https://maps.google.com/maps?q=manhatan&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0"
-                            style="border:0" allowfullscreen></iframe> -->
-                        </div>
-
-
-                        <div class="form-group">
-                            ​<div id="demo_0" class="carousel slide" data-ride="carousel">
-                                                                                                        </div>
-                        </div>
-
-                    </form>
-              </div>
-            </div>
-          </div>
+      {% endfor %}
       </div>
   </div>
 </div>

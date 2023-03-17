@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^car/', include('car.urls')),
     url(r'^gps/', include('gps.urls')),
     url(r'^jobs/', include('jobs.urls')),
+    url(r'^users/', include('users.urls')),
     url(r'^history/', history, name='history'),
     url(r'^', index, name='index'),
 ]

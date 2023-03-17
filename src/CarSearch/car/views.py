@@ -7,11 +7,14 @@ from CarSearch.settings.base import MEDIA_ROOT
 from bases.utils import FileUploadJob
 from car.forms import FileUploadForm
 from car.models import Car
+from gps.models import GPS
 from jobs.models import FileJob, JobStatus
 import dbfread
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def upload(request):
     if request.method == 'POST':
         form = FileUploadForm(request.POST, request.FILES)
@@ -36,36 +39,61 @@ def upload(request):
 
 
 def search(request):
+    page_number = 1
+    keyword = ""
+    car_status = ""
+    sql = """SELECT * FROM car_car where 1=1 """
     if request.method == 'POST':
-        page_number = 1
-        #cars = Car.objects.all()
-        sql = """SELECT * FROM car_car where 1=1 """
+
         car_status = request.POST.get('car_status')
         keyword = request.POST.get('keyword')
 
-        if keyword:
-            sql += """ and (CARNO like '%%{keyword}%%' or ADDR1 like '%%{keyword}%%')""".format(keyword=keyword)
+    if request.method == "GET":
+        page_number = request.GET.get('page')
+        if 'car_status' in request.session:
+            car_status = request.session['car_status']
 
+        if 'keyword' in request.session:
+            keyword = request.session['keyword']
 
-        if car_status:
-            sql += """and FINDMODE='{status}'""".format(status=car_status)
-            if car_status == "待  尋":
-                car_status_find = "selected"
-            elif car_status == "取  消":
-                car_status_cancel = "selected"
-            else:
-                car_status_all = "selected"
+        if 'car_status_find' in request.session:
+            car_status = "待  尋"
 
-        cars = Car.objects.raw(sql)
+        if 'car_status_cancel' in request.session:
+            car_status = "取  消"
 
-        results = list(cars)
-        page_obj = Paginator(results, 50)
-        row_count = len(results)
+    if keyword:
+        sql += """ and (CARNO like '%%{keyword}%%' or ADDR1 like '%%{keyword}%%')""".format(keyword=keyword)
+        request.session['keyword'] = keyword
+    else:
+        if 'keyword' in request.session:
+            del request.session['keyword']
 
-        if page_number:
-            page_results = page_obj.page(page_number)
-        else:
-            page_results = page_obj.page(1)
+    if car_status:
+        sql += """and FINDMODE='{status}'""".format(status=car_status)
+    else:
+        if 'car_status_find' in request.session:
+            del request.session['car_status_find']
+
+        if 'car_status_cancel' in request.session:
+            del request.session['car_status_cancel']
+
+    if car_status == "待  尋":
+        request.session['car_status_find'] = "selected"
+    elif car_status == "取  消":
+        request.session['car_status_cancel'] = "selected"
+    else:
+        request.session['car_status_all'] = "selected"
+
+    cars = Car.objects.raw(sql)
+    results = list(cars)
+    page_obj = Paginator(results, 50)
+    row_count = len(results)
+
+    if page_number:
+        page_results = page_obj.page(page_number)
+    else:
+        page_results = page_obj.page(1)
 
         return render(request, 'car/search.html', locals())
 
@@ -74,5 +102,13 @@ def search(request):
 
 def detail(request, pk):
     car = Car.objects.get(pk=pk)
+    if car.FINDMODE == "待  尋":
+        color = "059669"
+    if car.FINDMODE == "取  消":
+        color = "FF0000"
+    else:
+        color = "000000"
+
+    gpss = GPS.objects.filter(CARNO_2=pk).order_by('create_at')
 
     return render(request, 'car/detail.html', locals())

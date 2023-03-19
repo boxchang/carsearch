@@ -2,6 +2,17 @@
 {% block title %}
     排程紀錄
 {% endblock %}
+
+{% block js %}
+<script language="JavaScript">
+function refresh()
+{
+    window.location.reload();
+}
+setTimeout('refresh()',10000); //指定1秒刷新一次
+</script>
+{% endblock js %}
+
 {% block container %}
 {% if jobs %}
 <table class="table table-bordered table-sm">

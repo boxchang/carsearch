@@ -1,7 +1,4 @@
-from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
-import os
-import uuid
 from django.core.paginator import Paginator
 from CarSearch.settings.base import MEDIA_ROOT
 from bases.utils import FileUploadJob
@@ -12,6 +9,10 @@ from jobs.models import FileJob, JobStatus
 import dbfread
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+import threading
+
+from tasks.car_upload import CAR_Upload
+from users.models import CustomUser
 
 
 @login_required
@@ -29,8 +30,13 @@ def upload(request):
             table = dbfread.DBF(MEDIA_ROOT+file_path)
             fileJob.count = len(table)
             fileJob.status = JobStatus.objects.get(id=1)  # WAIT
-            fileJob.create_by = User.objects.get(id=1)
+            fileJob.create_by = CustomUser.objects.get(id=1)
             fileJob.save()
+
+            t = threading.Thread(target=run_upload)
+            t.setDaemon(True)  # 主線程不管子線程的結果
+            t.start()
+
             return redirect(reverse('job_detail'))
     else:
         form = FileUploadForm()
@@ -103,12 +109,18 @@ def search(request):
 def detail(request, pk):
     car = Car.objects.get(pk=pk)
     if car.FINDMODE == "待  尋":
-        color = "059669"
-    if car.FINDMODE == "取  消":
+        color = "b02a37"
+    elif car.FINDMODE == "取  消":
         color = "FF0000"
     else:
         color = "000000"
 
-    gpss = GPS.objects.filter(CARNO_2=pk).order_by('create_at')
+    gpss = GPS.objects.filter(CARNO_2=pk).order_by('-DATE_2', '-TIME_2')
 
     return render(request, 'car/detail.html', locals())
+
+
+def run_upload():
+    obj = CAR_Upload()
+    obj.delete_car_data()
+    obj.execute()

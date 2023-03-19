@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'CarSearch.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', #因為你用的是MySQL
-        'NAME': 'carsearch',
+        'NAME': 'carsearch2',
         'USER': 'web104',                       #這裡用最高權限管理員
         'PASSWORD': 'cnap*74182',            #你的密碼
         'HOST': '61.70.21.140',                           #空白預設為localhost
@@ -122,7 +122,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -146,3 +146,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static"), ]
 
 LOGIN_URL = '/users/login/'
+
+AUTH_USER_MODEL = 'users.CustomUser'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

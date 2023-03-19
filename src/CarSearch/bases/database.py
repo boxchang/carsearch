@@ -32,7 +32,7 @@ class database:
             conn = MySQLdb.connect(host="61.70.21.140",  # your host, usually localhost
                                    user="web104",  # your username
                                    passwd="cnap*74182",  # your password
-                                   db="carsearch",
+                                   db="carsearch2",
                                    port=3307, use_unicode=True, charset="utf8")  # name of the data base
 
             return conn

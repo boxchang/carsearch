@@ -22,14 +22,14 @@ class GPS_Upload(object):
     '''
     新增DBF資料
     '''
-    def insertDbfFile(self,create_by_id, batch_no, filename):
+    def insertDbfFile(self,batch_no, filename):
         table = dbfread.DBF(filename)
         self.log("Start Insert")
         print(len(table))
-        count = 1
+        count = 0
         for record in table:
             if self.chkRecord(record):
-                self.insertRecord(create_by_id, batch_no, record)
+                self.insertRecord(batch_no, record)
                 count += 1
         print("共{count}筆".format(count=count))
         self.log("End Insert")
@@ -48,12 +48,12 @@ class GPS_Upload(object):
             bResult = True
         return bResult
 
-    def insertRecord(self, create_by_id, batch_no, record):
+    def insertRecord(self, batch_no, record):
         db = database()
         sql = """insert into gps_gps(batch_no,carno_2,no_2,date_2,time_2,addr_2,gps_2a,gps_2b,
-                            mark_2,sales_2,bingo_2,update_2, create_by_id)
+                            mark_2,sales_2,bingo_2,update_2)
                 Values('{batch_no}','{CARNO_2}','{NO_2}','{DATE_2}','{TIME_2}','{ADDR_2}','{GPS_2A}','{GPS_2B}',
-                        '{MARK_2}','{SALES_2}','{BINGO_2}','{UPDATE_2}','{create_by_id}')""".format(
+                        '{MARK_2}','{SALES_2}','{BINGO_2}','{UPDATE_2}')""".format(
             batch_no=batch_no,
             CARNO_2=record['CARNO_2'],
             NO_2=record['NO_2'],
@@ -65,8 +65,7 @@ class GPS_Upload(object):
             MARK_2=record['MARK_2'],
             SALES_2=record['SALES_2'],
             BINGO_2=record['BINGO_2'],
-            UPDATE_2=record['UPDATE_2'],
-            create_by_id=create_by_id)
+            UPDATE_2=record['UPDATE_2'])
         db.execute_sql(sql)
 
 
@@ -78,12 +77,11 @@ class GPS_Upload(object):
         for row in rows:
             file_name = row['file']
             batch_no = row['batch_no']
-            create_by_id = row['create_by_id']
             file_path = MEDIA_ROOT + file_name
             upload.filejob_start_update(batch_no, '2', 0)  # ON-Going
-            count = self.insertDbfFile(create_by_id, batch_no, file_path)
+            count = self.insertDbfFile(batch_no, file_path)
             upload.filejob_end_update(batch_no, '3', count)  # DONE
 
 
-obj = GPS_Upload()
-obj.execute()
+# obj = GPS_Upload()
+# obj.execute()

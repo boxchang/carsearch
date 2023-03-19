@@ -1,14 +1,64 @@
 {% extends "bases/base.html" %}
-
+{% load static %}
 {% load crispy_forms_tags %}
 
-{% load static %}
+{% block container %}
+<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+        <div class="row">
+            <div class="col-12 p-5">
+                <div class="large-box" style="padding: 20px 0px;">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="member_info" data-bs-toggle="tab" data-bs-target="#member_info-pane" type="button" role="tab" aria-controls="member_info-pane" aria-selected="true">會員資料</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="car_visible" data-bs-toggle="tab" data-bs-target="#car_visible-pane" type="button" role="tab" aria-controls="car_visible-pane" aria-selected="false">可視車單資料</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="login_record" data-bs-toggle="tab" data-bs-target="#login_record-pane" type="button" role="tab" aria-controls="login_record-pane" aria-selected="false">登入紀錄</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="postponed_record" data-bs-toggle="tab" data-bs-target="#postponed_record-pane" type="button" role="tab" aria-controls="postponed_record-pane" aria-selected="false">到期日展延紀錄</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="searching_record" data-bs-toggle="tab" data-bs-target="#searching_record-pane" type="button" role="tab" aria-controls="searching_record-pane" aria-selected="false">車單搜尋紀錄</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="searching_record2" data-bs-toggle="tab" data-bs-target="#searching_record2-pane" type="button" role="tab" aria-controls="searching_record2-pane" aria-selected="false">定位資料上傳紀錄</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="searching_record3" data-bs-toggle="tab" data-bs-target="#searching_record3-pane" type="button" role="tab" aria-controls="searching_record3-pane" aria-selected="false">定位照片上傳紀錄</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="searching_record4" data-bs-toggle="tab" data-bs-target="#searching_record4-pane" type="button" role="tab" aria-controls="searching_record4-pane" aria-selected="false">車單下載紀錄</button>
+                      </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                      <div class="tab-pane fade show active" id="member_info-pane" role="tabpanel" aria-labelledby="member_info" tabindex="0">
+                          <form method="post" action="{% url 'register' %}">
+                              {% csrf_token %}
+                              <div class="pb-4" style="text-align: center;">
+                                  <input class="btn btn-success" type="submit" value="儲存" />
+                              </div>
+                              {% crispy userForm %}
+                          </form>
+                      </div>
+                      <div class="tab-pane fade" id="car_visible-pane" role="tabpanel" aria-labelledby="car_visible" tabindex="0">...</div>
+                      <div class="tab-pane fade" id="login_record-pane" role="tabpanel" aria-labelledby="login_record" tabindex="0">...</div>
+                      <div class="tab-pane fade" id="postponed_record-pane" role="tabpanel" aria-labelledby="postponed_record" tabindex="0">...</div>
+                      <div class="tab-pane fade" id="searching_record-pane" role="tabpanel" aria-labelledby="searching_record" tabindex="0">...</div>
+                      <div class="tab-pane fade" id="searching_record2-pane" role="tabpanel" aria-labelledby="searching_record2" tabindex="0">...</div>
+                      <div class="tab-pane fade" id="searching_record3-pane" role="tabpanel" aria-labelledby="searching_record3" tabindex="0">...</div>
+                      <div class="tab-pane fade" id="searching_record4-pane" role="tabpanel" aria-labelledby="searching_record4" tabindex="0">...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-{% block content %}
-<form method="post" action="{% url 'register' %}">
-  {% csrf_token %}
-  {% crispy userForm %}
-</form>
+    </div>
+</div>
+
 
 {% if messages %}
 <ul class="messages">
@@ -20,7 +70,7 @@
     {% endfor %}
 </ul>
 {% endif %}
-{% endblock content %}
+{% endblock container %}
 
 {% block js %}
 {% endblock js %}

@@ -42,7 +42,7 @@ class CAR_Upload(object):
 
         values_sql = "INSERT INTO car_car {colums} VALUES ".format(colums=fields_sql)
         for record in table:
-            if count % 3000 == 0:
+            if count % 3000 == 0 and count != 0:
                 db.execute_sql(values_sql[:-1])
                 values_sql = "INSERT INTO car_car {colums} VALUES ".format(colums=fields_sql)  # 初始化
 
@@ -77,6 +77,6 @@ class CAR_Upload(object):
 
 
 
-obj = CAR_Upload()
-obj.delete_car_data()
-obj.execute()
+# obj = CAR_Upload()
+# obj.delete_car_data()
+# obj.execute()

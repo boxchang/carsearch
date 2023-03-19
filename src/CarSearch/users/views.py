@@ -9,13 +9,14 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.urls import reverse
 from bases.views import index
+from users.forms import CurrentCustomUserForm
 
 
 def register(request):
     '''
     Register a new user
     '''
-    template = 'registration/register.html'
+    template = 'users/register.html'
     if request.method == 'GET':
         return render(request, template, {'userForm': CurrentCustomUserForm()})
 

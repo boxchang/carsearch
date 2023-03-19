@@ -17,54 +17,15 @@
         function submit(form_div){
             $('#'+form_div).submit();
         }
-
-        $(function(){
-            ShowDate();
-            ShowTime();
-        });
-
-        function ShowDate(){
-          var weekday = new Array(7);
-          weekday[0] =  "Sunday";
-          weekday[1] = "Monday";
-          weekday[2] = "Tuesday";
-          weekday[3] = "Wednesday";
-          weekday[4] = "Thursday";
-          weekday[5] = "Friday";
-          weekday[6] = "Saturday";
-          var TimeNow=new Date();
-          var yyyy = TimeNow.getFullYear();
-          var MM = (TimeNow.getMonth()+1<10 ? '0' : '')+(TimeNow.getMonth()+1);
-          var dd = (TimeNow.getDate()<10 ? '0' : '')+TimeNow.getDate();
-          var n = weekday[TimeNow.getDay()];
-          $('#show_date').html(yyyy+'/'+MM+'/'+dd+' '+n);
-        }
-
-        function ShowTime(){
-        　var TimeNow=new Date();
-        　var h = (TimeNow.getHours()<10 ? '0' : '')+TimeNow.getHours();
-          var m = (TimeNow.getMinutes()<10 ? '0' : '')+TimeNow.getMinutes();
-          var s = (TimeNow.getSeconds()<10 ? '0' : '')+TimeNow.getSeconds(); 　
-
-        　$('#show_time').html(h+':'+m);
-        　setTimeout('ShowTime()',1000);
-        }
-
     </script>
 </head>
 <body>
 <div class="container">
 	<div class="d-flex justify-content-center h-100">
-        <div class="col-md-8 d-flex justify-content-center h-100">
-            <div style="text-align: center;width:100%;height:370px;margin-top: auto;margin-bottom: auto;">
-                <div id="show_time" style="font-size: 10em;color:white;"></div>
-                <div id="show_date" style="font-size: 3em;color:white;"></div>
-            </div>
-        </div>
         <div class="col-md-4 d-flex justify-content-center h-100">
             <div class="card">
                 <div class="card-header">
-                    <h3>Sign In</h3>
+                    <h3>登入</h3>
                 </div>
                 <div class="card-body">
                     <form method="post" id="login_form" action="{% url 'login' %}">
@@ -87,7 +48,7 @@
                             <span class="input-group-text"><i class="fas fa-robot"></i></span>
                         </div>
                         <input type="checkbox" name="remember" class="form-control" value="on" checked>
-                        <span style="color:#FFF;font-size:1.3em;">記住密碼　　　</sapn>
+                        <span style="font-size:1.3em;">記住密碼　　　</sapn>
                     </div>
                         <input type="hidden" name="next" value="{{ next }}" />
                     </form>

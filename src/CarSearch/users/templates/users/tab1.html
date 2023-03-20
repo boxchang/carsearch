@@ -1,0 +1,8 @@
+{% load crispy_forms_tags %}
+<form method="post" action="{% url 'register' %}">
+  {% csrf_token %}
+  <div class="pb-4" style="text-align: center;">
+      <input class="btn btn-success" type="submit" value="儲存" />
+  </div>
+  {% crispy userForm %}
+</form>

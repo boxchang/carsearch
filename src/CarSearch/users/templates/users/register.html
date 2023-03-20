@@ -36,21 +36,29 @@
                     </ul>
                     <div class="tab-content" id="myTabContent">
                       <div class="tab-pane fade show active" id="member_info-pane" role="tabpanel" aria-labelledby="member_info" tabindex="0">
-                          <form method="post" action="{% url 'register' %}">
-                              {% csrf_token %}
-                              <div class="pb-4" style="text-align: center;">
-                                  <input class="btn btn-success" type="submit" value="儲存" />
-                              </div>
-                              {% crispy userForm %}
-                          </form>
+                          {% include 'users/tab1.html' %}
                       </div>
-                      <div class="tab-pane fade" id="car_visible-pane" role="tabpanel" aria-labelledby="car_visible" tabindex="0">...</div>
-                      <div class="tab-pane fade" id="login_record-pane" role="tabpanel" aria-labelledby="login_record" tabindex="0">...</div>
-                      <div class="tab-pane fade" id="postponed_record-pane" role="tabpanel" aria-labelledby="postponed_record" tabindex="0">...</div>
-                      <div class="tab-pane fade" id="searching_record-pane" role="tabpanel" aria-labelledby="searching_record" tabindex="0">...</div>
-                      <div class="tab-pane fade" id="searching_record2-pane" role="tabpanel" aria-labelledby="searching_record2" tabindex="0">...</div>
-                      <div class="tab-pane fade" id="searching_record3-pane" role="tabpanel" aria-labelledby="searching_record3" tabindex="0">...</div>
-                      <div class="tab-pane fade" id="searching_record4-pane" role="tabpanel" aria-labelledby="searching_record4" tabindex="0">...</div>
+                      <div class="tab-pane fade" id="car_visible-pane" role="tabpanel" aria-labelledby="car_visible" tabindex="0">
+                          {% include 'users/tab2.html' %}
+                      </div>
+                      <div class="tab-pane fade" id="login_record-pane" role="tabpanel" aria-labelledby="login_record" tabindex="0">
+                          {% include 'users/tab3.html' %}
+                      </div>
+                      <div class="tab-pane fade" id="postponed_record-pane" role="tabpanel" aria-labelledby="postponed_record" tabindex="0">
+                          {% include 'users/tab4.html' %}
+                      </div>
+                      <div class="tab-pane fade" id="searching_record-pane" role="tabpanel" aria-labelledby="searching_record" tabindex="0">
+                          {% include 'users/tab5.html' %}
+                      </div>
+                      <div class="tab-pane fade" id="searching_record2-pane" role="tabpanel" aria-labelledby="searching_record2" tabindex="0">
+                          {% include 'users/tab6.html' %}
+                      </div>
+                      <div class="tab-pane fade" id="searching_record3-pane" role="tabpanel" aria-labelledby="searching_record3" tabindex="0">
+                          {% include 'users/tab7.html' %}
+                      </div>
+                      <div class="tab-pane fade" id="searching_record4-pane" role="tabpanel" aria-labelledby="searching_record4" tabindex="0">
+                          {% include 'users/tab8.html' %}
+                      </div>
                     </div>
                 </div>
             </div>
@@ -73,4 +81,7 @@
 {% endblock container %}
 
 {% block js %}
+<script src="https://code.jquery.com/jquery-3.6.4.slim.min.js" integrity="sha256-a2yjHM4jnF9f54xUQakjZGaqYs/V1CYvWpoqZzC2/Bw=" crossorigin="anonymous"></script>
+<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 {% endblock js %}

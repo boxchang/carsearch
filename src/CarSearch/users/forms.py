@@ -40,19 +40,24 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, HTML, Field
 from .models import CustomUser
 
+
 class CurrentCustomUserForm(forms.ModelForm):
     user_type = forms.ModelChoiceField(label="類別", queryset=UserType.objects.all(), widget=forms.Select(
         attrs={'class': "form-select"}))
-    send_sms = forms.BooleanField(label="簡訊通知", widget=forms.CheckboxInput(attrs={'class': "form-check-input"}))
-    send_email = forms.BooleanField(label="Email通知", widget=forms.CheckboxInput(attrs={'class': "form-check-input"}))
-    password1 = forms.CharField(label="密碼", widget=forms.PasswordInput)
-    password2 = forms.CharField(label="確認密碼", widget=forms.PasswordInput)
+    send_sms = forms.BooleanField(label="簡訊通知", required=False, widget=forms.CheckboxInput(attrs={'class': "form-check-input"}))
+    send_email = forms.BooleanField(label="Email通知", required=False, widget=forms.CheckboxInput(attrs={'class': "form-check-input"}))
+    is_active = forms.BooleanField(label="是否啟用", required=False, widget=forms.CheckboxInput(attrs={'class': "form-check-input"}))
+    password1 = forms.CharField(label="密碼", required=False, widget=forms.PasswordInput(attrs={'placeholder': '請輸入登入密碼'}))
+    password2 = forms.CharField(label="確認密碼", required=False, widget=forms.PasswordInput(attrs={'placeholder': '請再次輸入登入密碼'}))
+    tel1 = forms.CharField(label="連絡電話1", required=False, widget=forms.TextInput(attrs={'placeholder': '請輸入市話(含區碼)，例071234567'}))
+    tel2 = forms.CharField(label="連絡電話2", required=False, widget=forms.TextInput(attrs={'placeholder': '請輸入市話(含區碼)，例071234567'}))
+    username = forms.CharField(label="登入帳號", widget=forms.TextInput(attrs={'placeholder': '請輸入市話(含區碼)或手機'}))
 
     class Meta:
         model = CustomUser
         fields = ('username', 'user_type', 'nickname', 'password', 'mobile1', 'mobile2',
                   'tel1', 'tel2', 'email1', 'email2', 'email3', 'email4', 'expired_date',
-                  'send_sms', 'send_email', 'note', 'is_active')
+                  'send_sms', 'send_email', 'note', 'is_active', 'password1', 'password2')
         widgets = {
             'note': forms.Textarea(attrs={'rows': 4, 'cols': 15}),
         }
@@ -63,29 +68,35 @@ class CurrentCustomUserForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
         self.helper.form_show_errors = True
+        self.fields['password'].required = False
+        self.fields['expired_date'].required = False
         #self.helper.add_input(Submit('submit', submit_title))
 
         self.helper.layout = Layout(
             Div(
-                Div('user_type', css_class="col-sm-3"),
-                Div('nickname', css_class="col-sm-3"),
+                Div('user_type', css_class="col-sm-4"),
+                Div('nickname', css_class="col-sm-4"),
+                Div(
+                    HTML('<div class="form-switch">'),
+                    Field('is_active'),
+                    HTML('</div>'), css_class='col-md-2 text-center'),
                 css_class='row'
             ),
             Div(
-                Div('mobile1', css_class="col-sm-3"),
-                Div('mobile2', css_class="col-sm-3"),
+                Div('mobile1', css_class="col-sm-4"),
+                Div('mobile2', css_class="col-sm-4"),
                 Div(
                     HTML('<div class="form-switch">'),
                     Field('send_sms'),
-                    HTML('</div>'), css_class='col-md-3 text-center'),
+                    HTML('</div>'), css_class='col-md-2 text-center'),
                 Div(HTML('<div class="form-switch">'),
                     Field('send_email'),
-                    HTML('</div>'), css_class="col-sm-3"),
+                    HTML('</div>'), css_class="col-sm-2"),
                 css_class='row'
             ),
             Div(
-                Div('tel1', css_class="col-sm-3"),
-                Div('tel2', css_class="col-sm-3"),
+                Div('tel1', css_class="col-sm-4"),
+                Div('tel2', css_class="col-sm-4"),
                 css_class='row'
             ),
             Div(
@@ -106,8 +117,8 @@ class CurrentCustomUserForm(forms.ModelForm):
             ),
             Div(
                 Div('username', css_class="col-sm-3"),
-                Div('password1', css_class="col-sm-3"),
-                Div('password2', css_class="col-sm-3"),
+                Div('password1', css_class="col-sm-4"),
+                Div('password2', css_class="col-sm-4"),
                 css_class='row'
             ),
             Div(
@@ -116,10 +127,12 @@ class CurrentCustomUserForm(forms.ModelForm):
             ),
         )
 
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.set_password(self.cleaned_data["password"])
-        if commit:
-            user.save()
+    def clean(self):
+        cleaned_data = super(CurrentCustomUserForm, self).clean()
+        password = cleaned_data.get("password1")
+        confirm_password = cleaned_data.get("password2")
 
-        return user
+        if password != confirm_password:
+            raise forms.ValidationError(
+                "密碼與確認密碼不一致"
+            )

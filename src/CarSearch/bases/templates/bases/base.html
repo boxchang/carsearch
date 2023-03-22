@@ -37,7 +37,7 @@
           <a class="nav-link" href="{% url 'gps_upload' %}">上傳定位</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'register' %}">會員資料</a>
+          <a class="nav-link" href="{% url 'user_list' %}">會員資料</a>
         </li>
       </ul>
     </div>
@@ -64,9 +64,19 @@
     </div>
   </div>
 </nav>
-<div class="container-fluid">
-  {% block container %}
-  {% endblock container %}
+<div class="container-fluid min-h-screen bg-gray-100">
+    <div class="py-2">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                <div class="row">
+                    <div class="col-12 p-4">
+                      {% block container %}
+                      {% endblock container %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 </body>

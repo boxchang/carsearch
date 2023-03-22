@@ -1,8 +1,9 @@
 {% load crispy_forms_tags %}
-<form method="post" action="{% url 'register' %}">
+<form method="post" action="{% url 'user_edit' %}">
   {% csrf_token %}
-  <div class="pb-4" style="text-align: center;">
-      <input class="btn btn-success" type="submit" value="儲存" />
+  <div class="pb-4" style="text-align: left;">
+      <input class="btn btn-primary" type="submit" value="儲存" />
+      <input type="hidden" name="pk" value="{{ pk }}">
   </div>
-  {% crispy userForm %}
+  {% crispy form %}
 </form>

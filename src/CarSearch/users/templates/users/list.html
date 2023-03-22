@@ -1,0 +1,79 @@
+{% extends 'bases/base.html' %}
+{% load static %}
+{% block title %}
+    會員列表
+{% endblock %}
+
+{% block js %}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<script src="{% static 'base\js\jquery.redirect.js' %}"></script>
+<script>
+    var member = {
+      'info': function(member_id) {
+          $.redirect('{% url 'user_detail' %}', {'pk': member_id, 'csrfmiddlewaretoken': '{{csrf_token}}'});
+      }
+    };
+</script>
+{% endblock js %}
+
+{% block container %}
+<div class="col-12">
+    <button type="button" class="btn btn-success" onclick="location.href='{% url 'user_create' %}'">新增</button>
+</div>
+<div class="input-group" style="margin-bottom: 20px;">
+    <input type="text" class="form-control" id="keyword" placeholder="會員搜尋">
+    <div class="input-group-append">
+        <button class="btn btn-success" type="button" id="search">
+            <i class="fas fa-search"></i>
+        </button>
+    </div>
+</div>
+<p id="fit_rowcount_alert" class="lead" style="font-size: 1rem; margin-bottom: 0;">共<b>154</b>筆會員資料 (管理員：4名 / 內部會員：61名 / 外部會員：89名)</p>
+<div id="member_data" class="table-responsive" style="height:600px; overflow:auto;">
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr class="text-center table-active">
+                <th scope="col" class="text-center text-nowrap">序列</th>
+                <!-- <th scope="col" data-column="member_accounts.NO" data-order="desc">編號</th> -->
+                <th scope="col" class="text-center text-nowrap" style="width: 25%;" data-column="member_accounts.NAME" data-order="desc">名稱</th>
+                <th scope="col" class="text-center text-nowrap" style="width: 15%;" data-column="users.status" data-order="desc">狀態</th>
+                <th scope="col" class="text-center text-nowrap" style="" data-column="users.phone_number" data-order="desc">帳號</th>
+                <th scope="col" class="text-center text-nowrap" style="" data-column="" data-order="">分類</th>
+                <th scope="col" class="text-center text-nowrap" style="width: 17%;" data-column="users_login_record.last_login" data-order="desc">最後登入</th>
+                <th scope="col" class="text-center text-nowrap" style="width: 15%;" data-column="users.expire_date" data-order="desc">到期日</th>
+                <th scope="col" class="text-center text-nowrap" style="" data-column="" data-order="">定位資料總筆數</th>
+                <th scope="col" class="text-center text-nowrap" style="" data-column="" data-order="">定位資料最舊日期</th>
+                <th scope="col" class="text-center text-nowrap" style="" data-column="" data-order="">定位資料最新日期</th>
+                <th scope="col" class="text-center text-nowrap" style="" data-column="" data-order="">定位照片總筆數</th>
+            </tr>
+        </thead>
+        <tbody>
+            <style>
+                /* 會員清單的標題列要可以點擊排序 */
+                /* #member_data > table > thead > tr > th:not(:nth-child(1)) { */
+                #member_data > table > thead > tr > th {
+                    cursor: pointer;
+                }
+
+                .data-row {
+                    cursor: pointer;
+                }
+            </style>
+            {% for member in members %}
+            <tr class="data-row" onclick="member.info('{{ member.pk }}');">
+                <th scope="row" class="text-center" style="vertical-align: middle;">{{ forloop.counter }}</th>
+                <td class="text-center text-nowrap">{{ member.nickname }}</td>
+                <td class="text-center text-nowrap"><span class="badge {{ member.is_active_color }}">{{ member.is_active_text }}</span></td>
+                <td class="text-center text-nowrap">{{ member.username }}</td>
+                <td class="text-center text-nowrap">{{ member.user_type|default:'管理者' }}</td>
+                <td class="text-center text-nowrap"><span class="badge {{ member.last_login_color }}">{{ member.last_login|default:"無紀錄" }}</span></td>
+                <td class="text-center text-nowrap"><span class="badge {{ member.expired_date_color }}">{{ member.expired_date|date:"Y-m-d" }}</span></td>
+                <td class="text-center text-nowrap">99,999</td>
+                <td class="text-center text-nowrap">2023/01/01</td>
+                <td class="text-center text-nowrap">2023/01/31</td>
+                <td class="text-center text-nowrap">99,999</td>
+            </tr>
+            {% endfor %}
+    </table>
+</div>
+{% endblock container %}

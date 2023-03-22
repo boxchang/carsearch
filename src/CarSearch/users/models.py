@@ -85,12 +85,18 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email2 = models.EmailField(_('Email2'), max_length=254, null=True, blank=True)
     email3 = models.EmailField(_('Email3'), max_length=254, null=True, blank=True)
     email4 = models.EmailField(_('Email4'), max_length=254, null=True, blank=True)
-    expired_date = models.DateTimeField(_('expired_date'), default=timezone.now)
+    expired_date = models.DateTimeField(_('帳號到期日'), default=timezone.now)
     send_sms = models.BooleanField(_('簡訊通知'), default=False)
     send_email = models.BooleanField(_('Email通知'), default=False)
     note = models.TextField(_('備註'), max_length=254, null=True, blank=True)
+    create_at = models.DateTimeField(auto_now_add=True, editable=True)
+    create_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='user_create_dt',
+                                  on_delete=models.DO_NOTHING)
+    update_at = models.DateTimeField(auto_now=True, null=True)
+    update_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='user_update_dt',
+                                  on_delete=models.DO_NOTHING)
 
-    # Admin
+    # Admin 保留欄位
     is_active = models.BooleanField(_('啟用'), default=False)
     is_staff = models.BooleanField(_('is_staff'), default=False)
     date_joined = models.DateTimeField(_('建檔日期'), default=timezone.now)
@@ -152,3 +158,9 @@ class UserAuthority(models.Model):
     OTH3 = models.BooleanField(default=False)
     OTH4 = models.BooleanField(default=False)
     DOWNLOAD_CAR_LIST = models.BooleanField(default=False)
+    create_at = models.DateTimeField(auto_now_add=True, editable=True)
+    create_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='auth_create_dt',
+                                  on_delete=models.DO_NOTHING)
+    update_at = models.DateTimeField(auto_now=True, null=True)
+    update_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='auth_update_dt',
+                                  on_delete=models.DO_NOTHING)

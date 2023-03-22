@@ -1,5 +1,7 @@
-<form>
-  <button class="btn btn-primary" id="premission_data_save" type="button">儲存</button>
+<form method="post" action="{% url 'user_auth' %}">
+    {% csrf_token %}
+  <input class="btn btn-success" type="submit" value="儲存" />
+  <input type="hidden" name="pk" value="{{ pk }}">
   <hr />
 <table class="table table-striped table-bordered table-hover">
     <thead>

@@ -110,6 +110,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         verbose_name = _('user')
         verbose_name_plural = _('users')
 
+        permissions = (
+            ("view_cartype", "car type view"),
+            ("view_carcolor", "car color view"),
+
+        )
+
 
     def email_user(self, subject, message, from_email=None):
         """

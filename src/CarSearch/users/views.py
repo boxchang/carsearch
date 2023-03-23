@@ -1,4 +1,6 @@
 import datetime
+
+from django.contrib.auth.models import Permission
 from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth import authenticate
@@ -11,10 +13,11 @@ from django.urls import reverse
 from bases.views import index
 from users.forms import CurrentCustomUserForm, CustomUser
 from users.models import UserAuthority
+from django.http import JsonResponse
 
-
+# Ajax API
 @login_required
-def user_auth(request):
+def user_auth_api(request):
     if request.method == 'POST':
         pk = request.POST.get('pk')
 
@@ -52,14 +55,15 @@ def user_auth(request):
             'DOWNLOAD_CAR_LIST': False
         }
 
+        user = CustomUser.objects.get(pk=request.user.pk)
         if request.POST.get('CARTYPE'):
-            defaults[''] = True
-        if request.POST.get('CARCOLOR'):
-            defaults[''] = True
-        if request.POST.get('CARTYPE'):
+            perm = Permission.objects.get(codename='view_cartype')
+            user.user_permissions.add(perm)
             defaults['CARTYPE'] = True
         if request.POST.get('CARCOLOR'):
             defaults['CARCOLOR'] = True
+            perm = Permission.objects.get(codename='view_carcolor')
+            user.user_permissions.add(perm)
         if request.POST.get('CARAGE'):
             defaults['CARAGE'] = True
         if request.POST.get('COMPANY'):
@@ -78,8 +82,8 @@ def user_auth(request):
             defaults['COMPMAN'] = True
         if request.POST.get('CASENO'):
             defaults['CASENO'] = True
-        if request.POST.get('DATE'):
-            defaults['DATE'] = True
+        if request.POST.get('VDATE'):
+            defaults['VDATE'] = True
         if request.POST.get('FINDMODE'):
             defaults['FINDMODE'] = True
         if request.POST.get('CHGDATE'):
@@ -90,8 +94,8 @@ def user_auth(request):
             defaults['NOTE2'] = True
         if request.POST.get('MAN'):
             defaults['MAN'] = True
-        if request.POST.get('ID'):
-            defaults['ID'] = True
+        if request.POST.get('VID'):
+            defaults['VID'] = True
         if request.POST.get('ADDR1'):
             defaults['ADDR1'] = True
         if request.POST.get('ADDR2'):
@@ -118,21 +122,19 @@ def user_auth(request):
             defaults['OTH4'] = True
         if request.POST.get('DOWNLOAD_CAR_LIST'):
             defaults['DOWNLOAD_CAR_LIST'] = True
-
-        obj, created = UserAuthority.objects.update_or_create(pk=pk, defaults)
+        defaults['create_by'] = request.user
+        defaults['update_by'] = request.user
+        obj, created = UserAuthority.objects.update_or_create(pk=pk, defaults=defaults)
 
         if created:
-            obj.create_by = request.user
+            msg = "權限新增完成"
         else:
-            obj.update_by = request.user
+            msg = "權限更新完成"
         obj.save()
 
-        return redirect('user_list')
+        return JsonResponse(msg, safe=False)
 
-
-
-
-
+# Create
 @login_required
 def create(request):
     template = 'users/create.html'
@@ -165,9 +167,15 @@ def detail(request):
     if request.method == 'POST':
         pk = request.POST.get('pk')
         member = CustomUser.objects.get(pk=pk)
+
+        try:
+            auth = UserAuthority.objects.get(pk=pk)
+        except UserAuthority.DoesNotExist:
+            auth = None
         form = CurrentCustomUserForm(instance=member)
         return render(request, template, locals())
 
+# Edit
 @login_required
 def user_edit(request):
     template = 'users/edit.html'

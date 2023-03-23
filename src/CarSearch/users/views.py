@@ -15,123 +15,182 @@ from users.forms import CurrentCustomUserForm, CustomUser
 from users.models import UserAuthority
 from django.http import JsonResponse
 
+
+def add_permission(user, codename):
+    codename = 'view_' + str(codename).lower()
+    perm = Permission.objects.get(codename=codename)
+    user.user_permissions.add(perm)
+
+def remove_permission(user, codename):
+    codename = 'view_' + str(codename).lower()
+    perm = Permission.objects.get(codename=codename)
+    user.user_permissions.remove(perm)
+
+
 # Ajax API
 @login_required
 def user_auth_api(request):
     if request.method == 'POST':
         pk = request.POST.get('pk')
 
-        defaults = {
-            'CARTYPE': False,
-            'CARCOLOR': False,
-            'CARAGE': False,
-            'COMPANY': False,
-            'COMPANY2': False,
-            'DEBIT': False,
-            'ENDDATE': False,
-            'ACCNO': False,
-            'GRADE': False,
-            'COMPMAN': False,
-            'CASENO': False,
-            'VDATE': False,
-            'FINDMODE': False,
-            'CHGDATE': False,
-            'CHGREC': False,
-            'NOTE2': False,
-            'MAN': False,
-            'VID': False,
-            'ADDR1': False,
-            'ADDR2': False,
-            'ADDR3': False,
-            'ADDR4': False,
-            'TEL1': False,
-            'TEL2': False,
-            'TEL3': False,
-            'TEL4': False,
-            'OTH1': False,
-            'OTH2': False,
-            'OTH3': False,
-            'OTH4': False,
-            'DOWNLOAD_CAR_LIST': False
-        }
+        user = CustomUser.objects.get(pk=pk)
 
-        user = CustomUser.objects.get(pk=request.user.pk)
         if request.POST.get('CARTYPE'):
-            perm = Permission.objects.get(codename='view_cartype')
-            user.user_permissions.add(perm)
-            defaults['CARTYPE'] = True
-        if request.POST.get('CARCOLOR'):
-            defaults['CARCOLOR'] = True
-            perm = Permission.objects.get(codename='view_carcolor')
-            user.user_permissions.add(perm)
-        if request.POST.get('CARAGE'):
-            defaults['CARAGE'] = True
-        if request.POST.get('COMPANY'):
-            defaults['COMPANY'] = True
-        if request.POST.get('COMPANY2'):
-            defaults['COMPANY2'] = True
-        if request.POST.get('DEBIT'):
-            defaults['DEBIT'] = True
-        if request.POST.get('ENDDATE'):
-            defaults['ENDDATE'] = True
-        if request.POST.get('ACCNO'):
-            defaults['ACCNO'] = True
-        if request.POST.get('GRADE'):
-            defaults['GRADE'] = True
-        if request.POST.get('COMPMAN'):
-            defaults['COMPMAN'] = True
-        if request.POST.get('CASENO'):
-            defaults['CASENO'] = True
-        if request.POST.get('VDATE'):
-            defaults['VDATE'] = True
-        if request.POST.get('FINDMODE'):
-            defaults['FINDMODE'] = True
-        if request.POST.get('CHGDATE'):
-            defaults['CHGDATE'] = True
-        if request.POST.get('CHGREC'):
-            defaults['CHGREC'] = True
-        if request.POST.get('NOTE2'):
-            defaults['NOTE2'] = True
-        if request.POST.get('MAN'):
-            defaults['MAN'] = True
-        if request.POST.get('VID'):
-            defaults['VID'] = True
-        if request.POST.get('ADDR1'):
-            defaults['ADDR1'] = True
-        if request.POST.get('ADDR2'):
-            defaults['ADDR2'] = True
-        if request.POST.get('ADDR3'):
-            defaults['ADDR3'] = True
-        if request.POST.get('ADDR4'):
-            defaults['ADDR4'] = True
-        if request.POST.get('TEL1'):
-            defaults['TEL1'] = True
-        if request.POST.get('TEL2'):
-            defaults['TEL2'] = True
-        if request.POST.get('TEL3'):
-            defaults['TEL3'] = True
-        if request.POST.get('TEL4'):
-            defaults['TEL4'] = True
-        if request.POST.get('OTH1'):
-            defaults['OTH1'] = True
-        if request.POST.get('OTH2'):
-            defaults['OTH2'] = True
-        if request.POST.get('OTH3'):
-            defaults['OTH3'] = True
-        if request.POST.get('OTH4'):
-            defaults['OTH4'] = True
-        if request.POST.get('DOWNLOAD_CAR_LIST'):
-            defaults['DOWNLOAD_CAR_LIST'] = True
-        defaults['create_by'] = request.user
-        defaults['update_by'] = request.user
-        obj, created = UserAuthority.objects.update_or_create(pk=pk, defaults=defaults)
-
-        if created:
-            msg = "權限新增完成"
+            add_permission(user, 'CARTYPE')
         else:
-            msg = "權限更新完成"
-        obj.save()
+            remove_permission(user, 'CARTYPE')
 
+        if request.POST.get('CARCOLOR'):
+            add_permission(user, 'CARCOLOR')
+        else:
+            remove_permission(user, 'CARCOLOR')
+
+        if request.POST.get('CARAGE'):
+            add_permission(user, 'CARAGE')
+        else:
+            remove_permission(user, 'CARAGE')
+
+        if request.POST.get('COMPANY'):
+            add_permission(user, 'COMPANY')
+        else:
+            remove_permission(user, 'COMPANY')
+
+        if request.POST.get('COMPANY2'):
+            add_permission(user, 'COMPANY2')
+        else:
+            remove_permission(user, 'COMPANY2')
+
+        if request.POST.get('DEBIT'):
+            add_permission(user, 'DEBIT')
+        else:
+            remove_permission(user, 'DEBIT')
+
+        if request.POST.get('ENDDATE'):
+            add_permission(user, 'ENDDATE')
+        else:
+            remove_permission(user, 'ENDDATE')
+
+        if request.POST.get('ACCNO'):
+            add_permission(user, 'ACCNO')
+        else:
+            remove_permission(user, 'ACCNO')
+
+        if request.POST.get('GRADE'):
+            add_permission(user, 'GRADE')
+        else:
+            remove_permission(user, 'GRADE')
+
+        if request.POST.get('COMPMAN'):
+            add_permission(user, 'COMPMAN')
+        else:
+            remove_permission(user, 'COMPMAN')
+
+        if request.POST.get('CASENO'):
+            add_permission(user, 'CASENO')
+        else:
+            remove_permission(user, 'CASENO')
+
+        if request.POST.get('VDATE'):
+            add_permission(user, 'VDATE')
+        else:
+            remove_permission(user, 'VDATE')
+
+        if request.POST.get('FINDMODE'):
+            add_permission(user, 'FINDMODE')
+        else:
+            remove_permission(user, 'FINDMODE')
+
+        if request.POST.get('CHGDATE'):
+            add_permission(user, 'CHGDATE')
+        else:
+            remove_permission(user, 'CHGDATE')
+
+        if request.POST.get('CHGREC'):
+            add_permission(user, 'CHGREC')
+        else:
+            remove_permission(user, 'CHGREC')
+
+        if request.POST.get('NOTE2'):
+            add_permission(user, 'NOTE2')
+        else:
+            remove_permission(user, 'NOTE2')
+
+        if request.POST.get('MAN'):
+            add_permission(user, 'MAN')
+        else:
+            remove_permission(user, 'MAN')
+
+        if request.POST.get('VID'):
+            add_permission(user, 'VID')
+        else:
+            remove_permission(user, 'VID')
+
+        if request.POST.get('ADDR1'):
+            add_permission(user, 'ADDR1')
+        else:
+            remove_permission(user, 'ADDR1')
+
+        if request.POST.get('ADDR2'):
+            add_permission(user, 'ADDR2')
+        else:
+            remove_permission(user, 'ADDR2')
+
+        if request.POST.get('ADDR3'):
+            add_permission(user, 'ADDR3')
+        else:
+            remove_permission(user, 'ADDR3')
+
+        if request.POST.get('ADDR4'):
+            add_permission(user, 'ADDR4')
+        else:
+            remove_permission(user, 'ADDR4')
+
+        if request.POST.get('TEL1'):
+            add_permission(user, 'TEL1')
+        else:
+            remove_permission(user, 'TEL1')
+
+        if request.POST.get('TEL2'):
+            add_permission(user, 'TEL2')
+        else:
+            remove_permission(user, 'TEL2')
+
+        if request.POST.get('TEL3'):
+            add_permission(user, 'TEL3')
+        else:
+            remove_permission(user, 'TEL3')
+
+        if request.POST.get('TEL4'):
+            add_permission(user, 'TEL4')
+        else:
+            remove_permission(user, 'TEL4')
+
+        if request.POST.get('OTH1'):
+            add_permission(user, 'OTH1')
+        else:
+            remove_permission(user, 'OTH1')
+
+        if request.POST.get('OTH2'):
+            add_permission(user, 'OTH2')
+        else:
+            remove_permission(user, 'OTH2')
+
+        if request.POST.get('OTH3'):
+            add_permission(user, 'OTH3')
+        else:
+            remove_permission(user, 'OTH3')
+
+        if request.POST.get('OTH4'):
+            add_permission(user, 'OTH4')
+        else:
+            remove_permission(user, 'OTH4')
+
+        if request.POST.get('DOWNLOAD_CAR_LIST'):
+            add_permission(user, 'DOWNLOAD_CAR_LIST')
+        else:
+            remove_permission(user, 'DOWNLOAD_CAR_LIST')
+
+        msg = "權限更新完成"
         return JsonResponse(msg, safe=False)
 
 # Create
@@ -167,11 +226,38 @@ def detail(request):
     if request.method == 'POST':
         pk = request.POST.get('pk')
         member = CustomUser.objects.get(pk=pk)
+        view_cartype = member.has_perm('users.view_cartype')
+        view_carcolor = member.has_perm('users.view_carcolor')
+        view_carage = member.has_perm('users.view_carage')
+        view_company = member.has_perm('users.view_company')
+        view_company2 = member.has_perm('users.view_company2')
+        view_debit = member.has_perm('users.view_debit')
+        view_enddate = member.has_perm('users.view_enddate')
+        view_accno = member.has_perm('users.view_accno')
+        view_grade = member.has_perm('users.view_grade')
+        view_compman = member.has_perm('users.view_compman')
+        view_caseno = member.has_perm('users.view_caseno')
+        view_cdate = member.has_perm('users.view_cdate')
+        view_findmode = member.has_perm('users.view_findmode')
+        view_chgdate = member.has_perm('users.view_chgdate')
+        view_chgrec = member.has_perm('users.view_chgrec')
+        view_note2 = member.has_perm('users.view_note2')
+        view_man = member.has_perm('users.view_man')
+        view_cid = member.has_perm('users.view_cid')
+        view_addr1 = member.has_perm('users.view_addr1')
+        view_addr2 = member.has_perm('users.view_addr2')
+        view_addr3 = member.has_perm('users.view_addr3')
+        view_addr4 = member.has_perm('users.view_addr4')
+        view_tel1 = member.has_perm('users.view_tel1')
+        view_tel2 = member.has_perm('users.view_tel2')
+        view_tel3 = member.has_perm('users.view_tel3')
+        view_tel4 = member.has_perm('users.view_tel4')
+        view_oth1 = member.has_perm('users.view_oth1')
+        view_oth2 = member.has_perm('users.view_oth2')
+        view_oth3 = member.has_perm('users.view_oth3')
+        view_oth4 = member.has_perm('users.view_oth4')
+        view_download_car_list = member.has_perm('users.view_download_car_list')
 
-        try:
-            auth = UserAuthority.objects.get(pk=pk)
-        except UserAuthority.DoesNotExist:
-            auth = None
         form = CurrentCustomUserForm(instance=member)
         return render(request, template, locals())
 

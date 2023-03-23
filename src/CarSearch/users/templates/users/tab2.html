@@ -16,217 +16,217 @@
                 <th scope="row" class="text-center">1</th>
                 <td>廠牌型式</td>
                 <td style="text-align: center;">
-                  <input type="checkbox" name="CARTYPE" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light" {% if auth.CARTYPE %}checked{% else %}''{% endif %}>
+                  <input type="checkbox" name="CARTYPE" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light" {% if view_cartype %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
         <tr class="data-row">
                 <th scope="row" class="text-center">2</th>
                 <td>顏色</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="CARCOLOR" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.CARCOLOR %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="CARCOLOR" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_carcolor %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
         <tr class="data-row">
                 <th scope="row" class="text-center">3</th>
                 <td>年分</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="CARAGE" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.CARAGE %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="CARAGE" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_carage %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
         <tr class="data-row">
                 <th scope="row" class="text-center">4</th>
                 <td>單位</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="COMPANY" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.COMPANY %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="COMPANY" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_company %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
         <tr class="data-row">
                 <th scope="row" class="text-center">5</th>
                 <td>記號</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="COMPANY2" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.COMPANY2 %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="COMPANY2" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_company2 %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
         <tr class="data-row">
                 <th scope="row" class="text-center">6</th>
                 <td>債權</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="DEBIT" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.DEBIT %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="DEBIT" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_debit %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
                                                                         <tr class="data-row">
                 <th scope="row" class="text-center">7</th>
                 <td>動保迄日</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="ENDDATE" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.ENDDATE %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="ENDDATE" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_enddate %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
                                                                         <tr class="data-row">
                 <th scope="row" class="text-center">8</th>
                 <td>帳號</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="ACCNO" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.ACCNO %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="ACCNO" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_accno %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
                                                                         <tr class="data-row">
                 <th scope="row" class="text-center">9</th>
                 <td>等級</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="GRADE" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.GRADE %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="GRADE" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_grade %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
         <tr class="data-row">
                 <th scope="row" class="text-center">10</th>
                 <td>承辦人</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="COMPMAN" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.COMPMAN %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="COMPMAN" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_compman %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
         <tr class="data-row">
                 <th scope="row" class="text-center">11</th>
                 <td>案件編號</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="CASENO" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.CASENO %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="CASENO" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_caseno %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
         <tr class="data-row">
                 <th scope="row" class="text-center">12</th>
                 <td>建檔日期</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="VDATE" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.VDATE %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="VDATE" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_cdate %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
         <tr class="data-row">
                 <th scope="row" class="text-center">13</th>
                 <td>狀態</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="FINDMODE" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.FINDMODE %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="FINDMODE" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_findmode %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
         <tr class="data-row">
                 <th scope="row" class="text-center">14</th>
                 <td>異動日期</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="CHGDATE" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.CHGDATE %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="CHGDATE" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_chgdate %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
         <tr class="data-row">
                 <th scope="row" class="text-center">15</th>
                 <td>異動紀錄</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="CHGREC" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.CHGREC %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="CHGREC" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_chgrec %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
         <tr class="data-row">
                 <th scope="row" class="text-center">16</th>
                 <td>備註2</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="NOTE2" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.NOTE2 %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="NOTE2" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_note2 %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
         <tr class="data-row">
                 <th scope="row" class="text-center">17</th>
                 <td>關聯</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="MAN" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.MAN %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="MAN" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_man %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
         <tr class="data-row">
                 <th scope="row" class="text-center">18</th>
                 <td>證號</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="VID" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.VID %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="CID" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_cid %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
         <tr class="data-row">
                 <th scope="row" class="text-center">19</th>
                 <td>地址1</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="ADDR1" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.ADDR1 %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="ADDR1" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_addr1 %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
         <tr class="data-row">
                 <th scope="row" class="text-center">20</th>
                 <td>地址2</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="ADDR2" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.ADDR2 %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="ADDR2" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_addr2 %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
         <tr class="data-row">
                 <th scope="row" class="text-center">21</th>
                 <td>地址3</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="ADDR3" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.ADDR3 %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="ADDR3" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_addr3 %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
         <tr class="data-row">
                 <th scope="row" class="text-center">22</th>
                 <td>地址4</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="ADDR4" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.ADDR4 %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="ADDR4" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_addr4 %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
         <tr class="data-row">
                 <th scope="row" class="text-center">23</th>
                 <td>註1</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="TEL1" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.TEL1 %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="TEL1" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_tel1 %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
         <tr class="data-row">
                 <th scope="row" class="text-center">24</th>
                 <td>註2</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="TEL2" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.TEL2 %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="TEL2" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_tel2 %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
         <tr class="data-row">
                 <th scope="row" class="text-center">25</th>
                 <td>註3</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="TEL3" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.TEL3 %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="TEL3" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_tel3 %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
         <tr class="data-row">
                 <th scope="row" class="text-center">26</th>
                 <td>註4</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="TEL4" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.TEL4 %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="TEL4" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_tel4 %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
         <tr class="data-row">
                 <th scope="row" class="text-center">27</th>
                 <td>主保1</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="OTH1" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.OTH1 %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="OTH1" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_oth1 %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
         <tr class="data-row">
                 <th scope="row" class="text-center">28</th>
                 <td>主保2</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="OTH2" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.OTH2 %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="OTH2" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_oth2 %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
         <tr class="data-row">
                 <th scope="row" class="text-center">29</th>
                 <td>主保3</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="OTH3" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.OTH3 %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="OTH3" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_oth3 %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
         <tr class="data-row">
                 <th scope="row" class="text-center">30</th>
                 <td>主保4</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="OTH4" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.OTH4 %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="OTH4" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_oth4 %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
         <tr class="data-row">
                 <th scope="row" class="text-center">31</th>
                 <td>下載車單</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" name="DOWNLOAD_CAR_LIST" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if auth.DOWNLOAD_CAR_LIST %}checked{% else %}''{% endif %}>
+                    <input type="checkbox" name="DOWNLOAD_CAR_LIST" data-toggle="toggle" data-on="顯示" data-off="隱藏" data-onstyle="primary" data-offstyle="light"{% if view_download_car_list %}checked{% else %}''{% endif %}>
                 </td>
             </tr>
     </tbody>

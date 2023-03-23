@@ -47,7 +47,7 @@
                     <div class="col-2 p-2" style="text-align:right;">車號：</div>
                     <div class="col-2 p-2 content">{{ car.CARNO }}</div>
                     <div class="col-2 p-2" style="text-align:right;">狀態：</div>
-                    <div class="col-2 p-2 content"><span style="color: #{{ color }};">{{ car.FINDMODE }}</span></div>
+                    <div class="col-2 p-2 content"><span style="color: #{{ color }};">{% if perms.users.view_findmode %}{{ car.FINDMODE }}{% endif %}</span></div>
                 </div>
             </li>
             <li class="list-group-item">
@@ -55,123 +55,125 @@
                     <div class="col-2 p-2" style="text-align:right;">廠牌型式：</div>
                     <div class="col-2 p-2 content">{% if perms.users.view_cartype %}{{ car.CARTYPE }}{% endif %}</div>
                     <div class="col-2 p-2" style="text-align:right;">顏色：</div>
-                    <div class="col-2 p-2 content">{{ car.CARCOLOR }}</div>
+                    <div class="col-2 p-2 content">{% if perms.users.view_carcolor %}{{ car.CARCOLOR }}{% endif %}</div>
                     <div class="col-2 p-2" style="text-align:right;">年份：</div>
-                    <div class="col-2 p-2 content">{{ car.CARAGE }}</div>
+                    <div class="col-2 p-2 content">{% if perms.users.view_carage %}{{ car.CARAGE }}{% endif %}</div>
                 </div>
             </li>
             <li class="list-group-item">
                 <div class="row">
                     <div class="col-2 p-2" style="text-align:right;">單位：</div>
-                    <div class="col-2 p-2 content">{{ car.COMPANY }}</div>
+                    <div class="col-2 p-2 content">{% if perms.users.view_company %}{{ car.COMPANY }}{% endif %}</div>
                 </div>
             </li>
             <li class="list-group-item">
                 <div class="row">
                     <div class="col-2 p-2" style="text-align:right;">帳號：</div>
-                    <div class="col-2 p-2 content">{{ car.ACCNO }}</div>
+                    <div class="col-2 p-2 content">{% if perms.users.view_accno %}{{ car.ACCNO }}{% endif %}</div>
                     <div class="col-2 p-2" style="text-align:right;">等級：</div>
-                    <div class="col-2 p-2 content">{{ car.GRADE }}</div>
+                    <div class="col-2 p-2 content">{% if perms.users.view_grade %}{{ car.GRADE }}{% endif %}</div>
                 </div>
             </li>
             <li class="list-group-item">
                 <div class="row">
                     <div class="col-2 p-2" style="text-align:right;">承辦人：</div>
-                    <div class="col-2 p-2 content">{{ car.COMPMAN }}</div>
+                    <div class="col-2 p-2 content">{% if perms.users.view_compman %}{{ car.COMPMAN }}{% endif %}</div>
                     <div class="col-2 p-2" style="text-align:right;">記號：</div>
-                    <div class="col-2 p-2 content">{{ car.COMPANY2 }}</div>
+                    <div class="col-2 p-2 content">{% if perms.users.view_company2 %}{{ car.COMPANY2 }}{% endif %}</div>
                 </div>
             </li>
             <li class="list-group-item">
                 <div class="row">
                     <div class="col-2 p-2" style="text-align:right;">案件編號：</div>
-                    <div class="col-2 p-2 content">{{ car.CASENO }}</div>
+                    <div class="col-2 p-2 content">{% if perms.users.view_caseno %}{{ car.CASENO }}{% endif %}</div>
+                    <div class="col-2 p-2" style="text-align:right;">關聯：</div>
+                    <div class="col-2 p-2 content">{% if perms.users.view_man %}{{ car.MAN }}{% endif %}</div>
                 </div>
             </li>
             <li class="list-group-item">
                 <div class="row">
                     <div class="col-2 p-2" style="text-align:right;">建檔日期：</div>
-                    <div class="col-2 p-2 content">{{ car.CDATE }}</div>
+                    <div class="col-2 p-2 content">{% if perms.users.view_cdate %}{{ car.CDATE }}{% endif %}</div>
                     <div class="col-2 p-2" style="text-align:right;">異動日期：</div>
-                    <div class="col-2 p-2 content">{{ car.CHGDATE }}</div>
+                    <div class="col-2 p-2 content">{% if perms.users.view_chgdate %}{{ car.CHGDATE }}{% endif %}</div>
                 </div>
             </li>
             <li class="list-group-item">
                 <div class="row">
                     <div class="col-2 p-2" style="text-align:right;">主保1：</div>
-                    <div class="col-2 p-2 content">{{ car.OTH1 }}</div>
+                    <div class="col-2 p-2 content">{% if perms.users.view_oth1 %}{{ car.OTH1 }}{% endif %}</div>
                     <div class="col-2 p-2" style="text-align:right;">主保2：</div>
-                    <div class="col-2 p-2 content">{{ car.OTH2 }}</div>
+                    <div class="col-2 p-2 content">{% if perms.users.view_oth2 %}{{ car.OTH2 }}{% endif %}</div>
                 </div>
             </li>
             <li class="list-group-item">
                 <div class="row">
                     <div class="col-2 p-2" style="text-align:right;">主保3：</div>
-                    <div class="col-2 p-2 content">{{ car.OTH3 }}</div>
+                    <div class="col-2 p-2 content">{% if perms.users.view_oth3 %}{{ car.OTH3 }}{% endif %}</div>
                     <div class="col-2 p-2" style="text-align:right;">主保4：</div>
-                    <div class="col-2 p-2 content">{{ car.OTH4 }}</div>
+                    <div class="col-2 p-2 content">{% if perms.users.view_oth4 %}{{ car.OTH4 }}{% endif %}</div>
                 </div>
             </li>
             <li class="list-group-item">
                 <div class="row">
                     <div class="col-2 p-2" style="text-align:right;">電話1：</div>
-                    <div class="col-2 p-2 content">{{ car.TEL1 }}</div>
+                    <div class="col-2 p-2 content">{% if perms.users.view_tel1 %}{{ car.TEL1 }}{% endif %}</div>
                     <div class="col-2 p-2" style="text-align:right;">電話2：</div>
-                    <div class="col-2 p-2 content">{{ car.TEL2 }}</div>
+                    <div class="col-2 p-2 content">{% if perms.users.view_tel2 %}{{ car.TEL2 }}{% endif %}</div>
                 </div>
             </li>
             <li class="list-group-item">
                 <div class="row">
                     <div class="col-2 p-2" style="text-align:right;">電話3：</div>
-                    <div class="col-2 p-2 content">{{ car.TEL3 }}</div>
+                    <div class="col-2 p-2 content">{% if perms.users.view_tel3 %}{{ car.TEL3 }}{% endif %}</div>
                     <div class="col-2 p-2" style="text-align:right;">電話4：</div>
-                    <div class="col-2 p-2 content">{{ car.TEL4 }}</div>
+                    <div class="col-2 p-2 content">{% if perms.users.view_tel4 %}{{ car.TEL4 }}{% endif %}</div>
                 </div>
             </li>
             <li class="list-group-item">
                 <div class="row">
                     <div class="col-2 p-2" style="text-align:right;">地址1：</div>
-                    <div class="col-10 p-2 content">{{ car.ADDR1 }}</div>
+                    <div class="col-10 p-2 content">{% if perms.users.view_addr1 %}{{ car.ADDR1 }}{% endif %}</div>
                 </div>
             </li>
             <li class="list-group-item">
                 <div class="row">
                     <div class="col-2 p-2" style="text-align:right;">地址2：</div>
-                    <div class="col-10 p-2 content">{{ car.ADDR2 }}</div>
+                    <div class="col-10 p-2 content">{% if perms.users.view_addr2 %}{{ car.ADDR2 }}{% endif %}</div>
                 </div>
             </li>
             <li class="list-group-item">
                 <div class="row">
                     <div class="col-2 p-2" style="text-align:right;">地址3：</div>
-                    <div class="col-10 p-2 content">{{ car.ADDR3 }}</div>
+                    <div class="col-10 p-2 content">{% if perms.users.view_addr3 %}{{ car.ADDR3 }}{% endif %}</div>
                 </div>
             </li>
             <li class="list-group-item">
                 <div class="row">
                     <div class="col-2 p-2" style="text-align:right;">地址4：</div>
-                    <div class="col-10 p-2 content">{{ car.ADDR4 }}</div>
+                    <div class="col-10 p-2 content">{% if perms.users.view_addr4 %}{{ car.ADDR4 }}{% endif %}</div>
                 </div>
             </li>
             <li class="list-group-item">
                 <div class="row">
                     <div class="col-2 p-2" style="text-align:right;">證號：</div>
-                    <div class="col-2 p-2 content">{{ car.CID }}</div>
+                    <div class="col-2 p-2 content">{% if perms.users.view_cid %}{{ car.CID }}{% endif %}</div>
                     <div class="col-2 p-2" style="text-align:right;">債權：</div>
-                    <div class="col-2 p-2 content">{{ car.DEBIT }}</div>
+                    <div class="col-2 p-2 content">{% if perms.users.view_debit %}{{ car.DEBIT }}{% endif %}</div>
                 </div>
             </li>
             <li class="list-group-item">
                 <div class="row">
                     <div class="col-2 p-2" style="text-align:right;">異動紀錄：</div>
-                    <div class="col-2 p-2 content">{{ car.CHGDATE }}</div>
+                    <div class="col-2 p-2 content">{% if perms.users.view_chgdate %}{{ car.CHGDATE }}{% endif %}</div>
                     <div class="col-2 p-2" style="text-align:right;">動保迄日：</div>
-                    <div class="col-2 p-2 content">{{ car.ENDDATE }}</div>
+                    <div class="col-2 p-2 content">{% if perms.users.view_enddate %}{{ car.ENDDATE }}{% endif %}</div>
                 </div>
             </li>
             <li class="list-group-item">
                 <div class="row">
                     <div class="col-2 p-2" style="text-align:right;">備註2：</div>
-                    <div class="col-10 p-2 content">{{ car.NOTE2 }}</div>
+                    <div class="col-10 p-2 content">{% if perms.users.view_note2 %}{{ car.NOTE2 }}{% endif %}</div>
                 </div>
             </li>
         </ul>

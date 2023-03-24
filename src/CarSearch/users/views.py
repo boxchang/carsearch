@@ -12,7 +12,6 @@ from django.contrib.auth import logout as auth_logout
 from django.urls import reverse
 from bases.views import index
 from users.forms import CurrentCustomUserForm, CustomUser
-from users.models import UserAuthority
 from django.http import JsonResponse
 
 

@@ -69,7 +69,7 @@ def search(request):
             car_status = "取  消"
 
     if keyword:
-        sql += """ and (CARNO like '%%{keyword}%%' or ADDR1 like '%%{keyword}%%')""".format(keyword=keyword)
+        sql += """ and (CARNO like '%%{keyword}%%' or ADDR1 like '%%{keyword}%%') or CARNO2 like '%%{keyword}%%'""".format(keyword=keyword)
         request.session['keyword'] = keyword
     else:
         if 'keyword' in request.session:

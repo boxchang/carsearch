@@ -13,6 +13,7 @@
     {% block css %}
     {% endblock css %}
     {% block js %}
+
     {% endblock js %}
 </head>
 <body>
@@ -27,23 +28,12 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="{% url 'index' %}">更新資訊</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'job_detail' %}">查詢紀錄</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'car_upload' %}">上傳車單</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'gps_upload' %}">上傳定位</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'user_list' %}">會員資料</a>
-        </li>
       </ul>
     </div>
-    <div class="mx-auto" style="width: 500px;padding-right: 50px">
+    <div class="mx-auto" style="width: 500px;">
         <form class="d-flex" role="search" method="POST" action="{% url 'car_search' %}">
             {% csrf_token %}
+
             <select name="car_status" class="form-select me-2" id="car_status">
                 <option value="" {{ request.session.car_status_all }}>---------</option>
                 <option value="待  尋" {{ request.session.car_status_find }}>待 尋</option>
@@ -53,11 +43,85 @@
             <button class="btn btn-outline-success" type="submit"><i class="fas fa-search"></i></button>
         </form>
     </div>
+    <div style="padding-left: 5px;padding-right: 50px">
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#searchModal">
+          進階搜尋
+        </button>
+        <form role="search" method="POST" action="{% url 'car_search' %}">
+        {% csrf_token %}
+        <!-- Modal -->
+        <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="ModalLabel">進階搜尋</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-4" style="text-align: center">狀　　態：</div>
+                            <div class="col-8">
+                                <select name="car_status" class="form-select" id="car_status">
+                                    <option value="" {{ request.session.car_status_all }}>---------</option>
+                                    <option value="待  尋" {{ request.session.car_status_find }}>待 尋</option>
+                                    <option value="取  消" {{ request.session.car_status_cancel }}>取 消</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4" style="text-align: center">車　　牌：</div>
+                            <div class="col-8"><input class="form-control me-2" type="search" name="cartype" placeholder="車牌" aria-label="s_cartype" value="{{ request.session.cartype }}"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4" style="text-align: center">地　　址：</div>
+                            <div class="col-8"><input class="form-control me-2" type="search" name="cartype" placeholder="地址" aria-label="s_cartype" value="{{ request.session.cartype }}"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4" style="text-align: center">顏　　色：</div>
+                            <div class="col-8"><input class="form-control me-2" type="search" name="carcolor" placeholder="顏色" aria-label="s_carcolor" value="{{ request.session.carcolor }}"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4" style="text-align: center">年　　份：</div>
+                            <div class="col-8"><input class="form-control me-2" type="search" name="carage" placeholder="年份" aria-label="s_carage" value="{{ request.session.carage }}"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4" style="text-align: center">動保迄日：</div>
+                            <div class="col-8"><input class="form-control me-2" type="search" name="enddate" placeholder="動保迄日" aria-label="s_enddate" value="{{ request.session.enddate }}"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4" style="text-align: center">異動日期：</div>
+                            <div class="col-8"><input class="form-control me-2" type="search" name="chgdate" placeholder="異動日期" aria-label="s_chgdate" value="{{ request.session.chgdate }}"></div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                <button type="submit" class="btn btn-primary">查詢</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        </form>
+    </div>
+
+
+
     <div class="dropdown p-2">
       <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         {{ user.username }}
       </button>
       <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="{% url 'job_detail' %}">查詢紀錄</a></li>
+        <li><a class="dropdown-item" href="{% url 'car_upload' %}">上傳車單</a></li>
+        <li><a class="dropdown-item" href="{% url 'gps_upload' %}">上傳定位</a></li>
+        <hr />
+        <li><a class="dropdown-item" href="{% url 'user_list' %}">會員資料</a></li>
+        <hr />
         <li><a class="dropdown-item" href="#">帳號資料</a></li>
         <li><a class="dropdown-item" href="{% url 'logout' %}">登出</a></li>
       </ul>

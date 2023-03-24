@@ -40,7 +40,7 @@ class Car(models.Model):
     CHGREC = models.CharField(max_length=50)  # 未知
     NOTE2 = models.CharField(max_length=50)  # 備註2
     BNKDATA = models.CharField(max_length=50)  # 未知
-    MAN = models.CharField(max_length=50)  # 未知
+    MAN = models.CharField(max_length=50)  # 關聯
     AGE = models.CharField(max_length=50)  # 未知
     CID = models.CharField(max_length=50)  # 證號
     ADDR1 = models.CharField(max_length=255)  # 地址1
@@ -58,6 +58,7 @@ class Car(models.Model):
     NEWCHK = models.CharField(max_length=50)  # 未知
     PAUSEDATE = models.CharField(max_length=50)  # 未知
     NOJOIN = models.CharField(max_length=50)  # 未知
+    CARNO2 = models.CharField(max_length=50)  # 車號
 
     def __str__(self):
         return self.CARNO

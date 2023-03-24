@@ -38,16 +38,18 @@ class CAR_Upload(object):
             db_fields.append(field)
 
         fields_str = ','.join(db_fields)
-        fields_sql = "(batch_no, {colums})".format(colums=fields_str)
+        fields_sql = "(batch_no, CARNO2, {colums})".format(colums=fields_str)
 
-        values_sql = "INSERT INTO car_car {colums} VALUES ".format(colums=fields_sql)
+        init_sql = "INSERT INTO car_car {colums} VALUES ".format(colums=fields_sql)
+        values_sql = init_sql
         for record in table:
+            CARNO2 = str(record['CARNO']).replace('-', '')
             if count % 3000 == 0 and count != 0:
                 db.execute_sql(values_sql[:-1])
-                values_sql = "INSERT INTO car_car {colums} VALUES ".format(colums=fields_sql)  # 初始化
+                values_sql = init_sql  # 初始化
 
             values_str = ','.join("'{value}'".format(value=str(record[field]).replace("'", "''")) for field in fields)
-            values_sql += "('{batch_no}',{value}),".format(batch_no=batch_no, value=values_str)
+            values_sql += "('{batch_no}',{CARNO2},{value}),".format(batch_no=batch_no, CARNO2=CARNO2, value=values_str)
             count += 1
 
         db.execute_sql(values_sql[:-1])

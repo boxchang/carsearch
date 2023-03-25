@@ -75,26 +75,46 @@
 {% endblock container %}
 
 {% block js %}
-<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
 <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+{% endblock js %}
 
-<script>
-    $(document).ready(function() {
-        $('#submit_btn').click(function(event){
-             event.preventDefault(); //so that we stop normal form submit.
-             $.ajax({
-                 url: '{% url 'user_auth_api' %}', type: 'post',
-                 dataType: 'json',
-                 data: $('form#auth_form').serialize(),
-                 success: function(data) {
-                     alert(data);
-                 }
-             });
-        });
-
+{% block ready %}
+    $('#submit_btn').click(function(event){
+         event.preventDefault(); //so that we stop normal form submit.
+         $.ajax({
+             url: '{% url 'user_auth_api' %}', type: 'post',
+             dataType: 'json',
+             data: $('form#auth_form').serialize(),
+             success: function(data) {
+                 alert(data);
+             }
+         });
     });
 
-</script>
+    $('#postponed_expire_date_for_months').click(function(){
+        alert('hello1');
+        event.preventDefault(); //so that we stop normal form submit.
+         $.ajax({
+             url: '{% url 'postponed_expire_api' %}', type: 'post',
+             dataType: 'json',
+             data: $('form#postponed_expire_date').serialize(),
+             success: function(data) {
+                 alert(data);
+             }
+         });
+    });
 
-{% endblock js %}
+    $('#postponed_expire_date').click(function(){
+        alert('hello2');
+    });
+{% endblock ready %}
+
+{% block css %}
+<style>
+input[type='text']:read-only
+{
+    background-color: lightgrey;
+}
+</style>
+{% endblock css %}

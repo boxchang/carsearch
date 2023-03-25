@@ -1,9 +1,39 @@
 {% load crispy_forms_tags %}
-<form method="post" action="{% url 'user_edit' %}">
+<form method="post" action="{% url 'user_edit' %}" id="user_edit">
   {% csrf_token %}
   <div class="pb-4" style="text-align: left;">
       <input class="btn btn-primary" type="submit" value="儲存" />
       <input type="hidden" name="pk" value="{{ pk }}">
   </div>
   {% crispy form %}
+</form>
+<form method="post" action="{% url 'postponed_expire_api' %}" id="postponed_expire_date">
+{% csrf_token %}
+<div class="row">
+    <div class="col-4">
+        <label for="expire_date">帳號到期日</label>
+        <input type="text" class="form-control" name="expire_date" id="expire_date" value="{{ member.expired_date|date:'Y-m-d' }}" readonly="">
+    </div>
+    <div class="col-4">
+        <label>延期到期日</label>
+        <select class="form-control selectpicker" id="postponed_months" name="postponed_months">
+                <option value="1">延期1個月</option>
+                <option value="2">延期2個月</option>
+                <option value="3">延期3個月</option>
+                <option value="4">延期4個月</option>
+                <option value="5">延期5個月</option>
+                <option value="6">延期6個月</option>
+                <option value="7">延期7個月</option>
+                <option value="8">延期8個月</option>
+                <option value="9">延期9個月</option>
+                <option value="10">延期10個月</option>
+                <option value="11">延期11個月</option>
+                <option value="12">延期12個月</option>
+        </select>
+    </div>
+    <div class="col-4" style="padding-top: calc(24px + .5rem);">
+        <button type="button" class="btn btn-primary" id="postponed_expire_date_for_months">延期</button>
+        <button type="button" class="btn btn-primary" id="postponed_expire_date">延期至本月底</button>
+    </div>
+</div>
 </form>

@@ -1,5 +1,6 @@
 import datetime
 
+from dateutil.relativedelta import relativedelta
 from django.contrib.auth.models import Permission
 from django.utils import timezone
 from django.contrib import messages
@@ -13,6 +14,9 @@ from django.urls import reverse
 from bases.views import index
 from users.forms import CurrentCustomUserForm, CustomUser
 from django.http import JsonResponse
+from django.db.models import Q
+
+from users.models import UserType
 
 
 def add_permission(user, codename):
@@ -25,6 +29,20 @@ def remove_permission(user, codename):
     perm = Permission.objects.get(codename=codename)
     user.user_permissions.remove(perm)
 
+
+# Ajax API
+@login_required
+def postponed_expire_api(request):
+    if request.method == 'POST':
+        if request.POST.get('expire_date'):
+            expire_date = request.POST.get('expire_date')
+        if request.POST.get('postponed_months'):
+            postponed_months = request.POST.get('postponed_months')
+        if expire_date and postponed_months:
+            new_expire_date = datetime.datetime.strptime(expire_date, '%Y-%m-%d')+relativedelta(months=+int(postponed_months))
+
+        msg = str(new_expire_date)+"權限更新完成"
+        return JsonResponse(msg, safe=False)
 
 # Ajax API
 @login_required
@@ -258,6 +276,8 @@ def detail(request):
         view_download_car_list = member.has_perm('users.view_download_car_list')
 
         form = CurrentCustomUserForm(instance=member)
+        form.fields['username'].widget.attrs['readonly'] = True
+
         return render(request, template, locals())
 
 # Edit
@@ -270,6 +290,7 @@ def user_edit(request):
         password2 = request.POST.get('password2')
         member = CustomUser.objects.get(pk=pk)
         form = CurrentCustomUserForm(request.POST, instance=member)
+
         if form.is_valid():
             user = form.save(commit=False)
             user.create_by = request.user
@@ -284,6 +305,26 @@ def user_edit(request):
 def user_list(request):
     template = 'users/list.html'
     members = CustomUser.objects.all()
+    member_all = CustomUser.objects.all().count()
+    admin_count = CustomUser.objects.filter(user_type=1).count()
+    intern_member = CustomUser.objects.filter(user_type=2).count()
+    extern_member = CustomUser.objects.filter(user_type=3).count()
+
+    if request.method == 'POST':
+        user_keyword = request.POST.get('user_keyword')
+        if user_keyword:
+            query = Q(username__icontains=user_keyword)
+            query.add(Q(nickname__icontains=user_keyword), Q.OR)
+            query.add(Q(mobile1__icontains=user_keyword), Q.OR)
+            query.add(Q(mobile2__icontains=user_keyword), Q.OR)
+            query.add(Q(tel1__icontains=user_keyword), Q.OR)
+            query.add(Q(tel2__icontains=user_keyword), Q.OR)
+            query.add(Q(email1__icontains=user_keyword), Q.OR)
+            query.add(Q(email2__icontains=user_keyword), Q.OR)
+            query.add(Q(email3__icontains=user_keyword), Q.OR)
+            query.add(Q(email4__icontains=user_keyword), Q.OR)
+            members = CustomUser.objects.filter(query)
+
     for member in members:
         if member.is_active:
             member.is_active_text = "啟用"
@@ -297,8 +338,9 @@ def user_list(request):
         else:
             member.last_login_color = "bg-secondary"
 
-        yesterday = datetime.datetime.now() - datetime.timedelta(days=-1)
-        if member.expired_date > yesterday:
+        tomorrow = datetime.datetime.strftime((datetime.datetime.now() - datetime.timedelta(days=-1)), "%Y%m%d")
+        expired_date = datetime.datetime.strftime(member.expired_date, "%Y%m%d")
+        if int(expired_date) < int(tomorrow):
             member.expired_date_color = "bg-danger"
         else:
             member.expired_date_color = "bg-success"

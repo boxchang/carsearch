@@ -14,6 +14,114 @@ import threading
 from tasks.car_upload import CAR_Upload
 from users.models import CustomUser
 
+class SearchCondition(object):
+    car_status = ""
+    keyword = ""
+    carcolor = ""
+    carage = ""
+    enddate_start = ""
+    enddate_end = ""
+    chgdate_start = ""
+    chgdate_end = ""
+    car_status_find = ""
+    car_status_cancel = ""
+
+    def __init__(self, request):
+        if request.method == 'POST':
+            self.init_session(request)
+            self.car_status = request.POST.get('car_status')
+            self.keyword = request.POST.get('keyword')
+            self.addr = request.POST.get('addr')
+            self.carcolor = request.POST.get('carcolor')
+            self.carage = request.POST.get('carage')
+            self.enddate_start = request.POST.get('enddate_start')
+            self.enddate_end = request.POST.get('enddate_end')
+            self.chgdate_start = request.POST.get('chgdate_start')
+            self.chgdate_end = request.POST.get('chgdate_end')
+
+            if self.keyword:
+                request.session['keyword'] = self.keyword
+
+            if self.car_status == "待  尋":
+                request.session['car_status_find'] = "selected"
+            elif self.car_status == "取  消":
+                request.session['car_status_cancel'] = "selected"
+            else:
+                request.session['car_status_all'] = "selected"
+
+            if self.carcolor:
+                request.session['carcolor'] = self.carcolor
+
+            if self.carage:
+                request.session['carage'] = self.carage
+
+            if self.enddate_start:
+                request.session['enddate_start'] = self.enddate_start
+
+            if self.enddate_end:
+                request.session['enddate_end'] = self.enddate_end
+
+            if self.chgdate_start:
+                request.session['chgdate_start'] = self.chgdate_start
+
+            if self.chgdate_end:
+                request.session['chgdate_end'] = self.chgdate_end
+
+        if request.method == "GET":
+            if 'keyword' in request.session:
+                self.keyword = request.session['keyword']
+
+            if 'car_status_find' in request.session:
+                self.car_status_find = "待  尋"
+
+            if 'car_status_cancel' in request.session:
+                self.car_status_cancel = "取  消"
+
+            if 'carcolor' in request.session:
+                self.carcolor = request.session['carcolor']
+
+            if 'carage' in request.session:
+                self.carage = request.session['carage']
+
+            if 'enddate_start' in request.session:
+                self.enddate_start = request.session['enddate_start']
+
+            if 'enddate_end' in request.session:
+                self.enddate_end = request.session['enddate_end']
+
+            if 'chgdate_start' in request.session:
+                self.chgdate_start = request.session['chgdate_start']
+
+            if 'chgdate_end' in request.session:
+                self.chgdate_end = request.session['chgdate_end']
+
+    def init_session(self, request):
+        if 'keyword' in request.session:
+            del request.session['keyword']
+
+        if 'car_status_find' in request.session:
+            del request.session['car_status_find']
+
+        if 'car_status_cancel' in request.session:
+            del request.session['car_status_cancel']
+
+        if 'carcolor' in request.session:
+            del request.session['carcolor']
+
+        if 'carage' in request.session:
+            del request.session['carage']
+
+        if 'enddate_start' in request.session:
+            del request.session['enddate_start']
+
+        if 'enddate_end' in request.session:
+            del request.session['enddate_end']
+
+        if 'chgdate_start' in request.session:
+            del request.session['chgdate_start']
+
+        if 'chgdate_end' in request.session:
+            del request.session['chgdate_end']
 
 @login_required
 def upload(request):
@@ -48,48 +156,37 @@ def search(request):
     page_number = 1
     keyword = ""
     car_status = ""
-    sql = """SELECT * FROM car_car where 1=1 """
-    if request.method == 'POST':
 
-        car_status = request.POST.get('car_status')
-        keyword = request.POST.get('keyword')
+    condition = SearchCondition(request)
 
     if request.method == "GET":
         page_number = request.GET.get('page')
-        if 'car_status' in request.session:
-            car_status = request.session['car_status']
 
-        if 'keyword' in request.session:
-            keyword = request.session['keyword']
+    sql = """SELECT * FROM car_car where 1=1 """
+    if condition.keyword:
+        sql += """ and (CARNO like '%%{keyword}%%' 
+        or ADDR1 like '%%{keyword}%%' 
+        or ADDR2 like '%%{keyword}%%' 
+        or ADDR3 like '%%{keyword}%%' 
+        or ADDR4 like '%%{keyword}%%' 
+        or CARNO2 like '%%{keyword}%%')""".format(keyword=condition.keyword)
 
-        if 'car_status_find' in request.session:
-            car_status = "待  尋"
+    if condition.car_status:
+        sql += """and FINDMODE='{status}'""".format(status=condition.car_status)
 
-        if 'car_status_cancel' in request.session:
-            car_status = "取  消"
+    if condition.carcolor:
+        sql += """and CARCOLOR='{color}'""".format(color=condition.carcolor)
 
-    if keyword:
-        sql += """ and (CARNO like '%%{keyword}%%' or ADDR1 like '%%{keyword}%%') or CARNO2 like '%%{keyword}%%'""".format(keyword=keyword)
-        request.session['keyword'] = keyword
-    else:
-        if 'keyword' in request.session:
-            del request.session['keyword']
+    if condition.carage:
+        sql += """and CARAGE='{age}'""".format(age=condition.carage)
 
-    if car_status:
-        sql += """and FINDMODE='{status}'""".format(status=car_status)
-    else:
-        if 'car_status_find' in request.session:
-            del request.session['car_status_find']
+    if condition.enddate_start and condition.enddate_end:
+        sql += """and ENDDATE between '{end_date_start}' and '{end_date_end}'"""\
+            .format(end_date_start=condition.enddate_start, end_date_end=condition.enddate_end)
 
-        if 'car_status_cancel' in request.session:
-            del request.session['car_status_cancel']
-
-    if car_status == "待  尋":
-        request.session['car_status_find'] = "selected"
-    elif car_status == "取  消":
-        request.session['car_status_cancel'] = "selected"
-    else:
-        request.session['car_status_all'] = "selected"
+    if condition.chgdate_start and condition.chgdate_end:
+        sql += """and CHGDATE between '{chg_date_start}' and '{chg_date_end}'"""\
+            .format(chg_date_start=condition.chgdate_start, chg_date_end=condition.chgdate_end)
 
     cars = Car.objects.raw(sql)
     results = list(cars)

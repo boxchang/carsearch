@@ -21,6 +21,17 @@ class UserType(models.Model):
         return self.type_name
 
 
+class PostponeRecord(models.Model):
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING,
+                                  related_name='postpone_user_postpone')
+    manager = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING,
+                                related_name='postpone_manager_postpone')
+    before_date = models.TextField(_('展延前到期日'), max_length=10, null=False, blank=False)
+    after_date = models.TextField(_('展延後到期日'), max_length=10, null=False, blank=False)
+    ip_addr = models.TextField(_('操作IP位置'), max_length=15, null=False, blank=False)
+    create_at = models.DateTimeField(auto_now_add=True, editable=True)
+
+
 class CustomUserManager(BaseUserManager):
 
     def _create_user(self, username, password,

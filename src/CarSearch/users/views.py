@@ -1,6 +1,4 @@
 import datetime
-
-from dateutil.relativedelta import relativedelta
 from django.contrib.auth.models import Permission
 from django.utils import timezone
 from django.contrib import messages
@@ -16,7 +14,7 @@ from users.forms import CurrentCustomUserForm, CustomUser
 from django.http import JsonResponse
 from django.db.models import Q
 
-from users.models import UserType
+from users.models import PostponeRecord
 
 
 def add_permission(user, codename):
@@ -33,16 +31,67 @@ def remove_permission(user, codename):
 # Ajax API
 @login_required
 def postponed_expire_api(request):
-    if request.method == 'POST':
-        if request.POST.get('expire_date'):
-            expire_date = request.POST.get('expire_date')
-        if request.POST.get('postponed_months'):
-            postponed_months = request.POST.get('postponed_months')
-        if expire_date and postponed_months:
-            new_expire_date = datetime.datetime.strptime(expire_date, '%Y-%m-%d')+relativedelta(months=+int(postponed_months))
 
-        msg = str(new_expire_date)+"權限更新完成"
+    if request.method == 'POST':
+        if request.POST.get('postponed_date'):
+            postponed_date = request.POST.get('postponed_date')
+
+        msg = str(postponed_date) + "延期更新失敗"
+
+        if request.POST.get('pk'):
+            pk = request.POST.get('pk')
+            user = CustomUser.objects.get(pk=pk)
+            old_expired_date = user.expired_date
+            new_expired_date = datetime.datetime.strptime(postponed_date+' 23:59:59', '%Y-%m-%d %H:%M:%S')
+            user.expired_date = new_expired_date
+            user.update_by = request.user
+            user.save()
+
+            #Log
+            x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+            if x_forwarded_for:
+                ip = x_forwarded_for.split(',')[0]
+            else:
+                ip = request.META.get('REMOTE_ADDR')
+
+            record = PostponeRecord()
+            record.manager = request.user
+            record.owner = user
+            record.before_date = datetime.datetime.strftime(old_expired_date, "%Y-%m-%d")
+            record.after_date = postponed_date
+            record.ip_addr = ip
+            record.save()
+
+            msg = str(postponed_date)+"權限更新完成"
         return JsonResponse(msg, safe=False)
+
+# Ajax API
+@login_required
+def postpone_record_api(request):
+    html = ""
+    if request.method == 'POST':
+        pk = request.POST.get('pk')
+
+        # 延長紀錄
+        records = PostponeRecord.objects.filter(owner=pk)
+
+        index = 1
+        for record in records:
+            create_at = datetime.datetime.strftime(record.create_at, "%Y-%m-%d %H:%M:%S")
+            html += """
+            <tr>
+                <th scope="row" class="text-center">{index}</th>
+                <td class="text-center">{owner}</td>
+                <td class="text-center">{before_date}</td>
+                <td class="text-center">{after_date}</td>
+                <td class="text-center">{ip_addr}</td>
+                <td class="text-center">{create_at}</td>
+            </tr>
+            """.format(index=index, owner=record.owner, before_date=record.before_date, after_date=record.after_date,
+                       ip_addr=record.ip_addr, create_at=create_at)
+            index += 1
+
+    return JsonResponse(html, safe=False)
 
 # Ajax API
 @login_required
@@ -304,26 +353,38 @@ def user_edit(request):
 @login_required
 def user_list(request):
     template = 'users/list.html'
-    members = CustomUser.objects.all()
-    member_all = CustomUser.objects.all().count()
-    admin_count = CustomUser.objects.filter(user_type=1).count()
-    intern_member = CustomUser.objects.filter(user_type=2).count()
-    extern_member = CustomUser.objects.filter(user_type=3).count()
+
+
+    user_keyword = ""
+
+    query = Q(user_type__isnull=False)  # 排除超級管理者
+    members = CustomUser.objects.filter(query)
+
+    member_all = members.count()
+    admin_count = members.filter(user_type=1).count()
+    intern_member = members.filter(user_type=2).count()
+    extern_member = members.filter(user_type=3).count()
 
     if request.method == 'POST':
         user_keyword = request.POST.get('user_keyword')
-        if user_keyword:
-            query = Q(username__icontains=user_keyword)
-            query.add(Q(nickname__icontains=user_keyword), Q.OR)
-            query.add(Q(mobile1__icontains=user_keyword), Q.OR)
-            query.add(Q(mobile2__icontains=user_keyword), Q.OR)
-            query.add(Q(tel1__icontains=user_keyword), Q.OR)
-            query.add(Q(tel2__icontains=user_keyword), Q.OR)
-            query.add(Q(email1__icontains=user_keyword), Q.OR)
-            query.add(Q(email2__icontains=user_keyword), Q.OR)
-            query.add(Q(email3__icontains=user_keyword), Q.OR)
-            query.add(Q(email4__icontains=user_keyword), Q.OR)
-            members = CustomUser.objects.filter(query)
+        request.session['user_keyword'] = user_keyword
+
+    if request.method == 'GET':
+        if 'user_keyword' in request.session:
+            user_keyword = request.session['user_keyword']
+
+    if user_keyword:
+        query.add(Q(username__icontains=user_keyword))
+        query.add(Q(nickname__icontains=user_keyword), Q.OR)
+        query.add(Q(mobile1__icontains=user_keyword), Q.OR)
+        query.add(Q(mobile2__icontains=user_keyword), Q.OR)
+        query.add(Q(tel1__icontains=user_keyword), Q.OR)
+        query.add(Q(tel2__icontains=user_keyword), Q.OR)
+        query.add(Q(email1__icontains=user_keyword), Q.OR)
+        query.add(Q(email2__icontains=user_keyword), Q.OR)
+        query.add(Q(email3__icontains=user_keyword), Q.OR)
+        query.add(Q(email4__icontains=user_keyword), Q.OR)
+        members = CustomUser.objects.filter(query)
 
     for member in members:
         if member.is_active:

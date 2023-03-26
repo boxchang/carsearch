@@ -213,6 +213,9 @@ def detail(request, pk):
         color = "000000"
 
     gpss = GPS.objects.filter(CARNO_2=pk).order_by('-DATE_2', '-TIME_2')
+    for gps in gpss:
+        gps.GPS_2A = (float(gps.GPS_2A[3:])/60)+float(gps.GPS_2A[0:3])  # 經度 22
+        gps.GPS_2B = (float(gps.GPS_2B[2:])/60)+float(gps.GPS_2B[0:2])  # 緯度 120
 
     return render(request, 'car/detail.html', locals())
 

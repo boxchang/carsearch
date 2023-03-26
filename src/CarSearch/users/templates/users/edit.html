@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block container %}
-<a href="javascript:history.back()" class="btn btn-warning"><i class="fas fa-arrow-left fa-1x"></i></a>
+<a href="{% url 'user_list' %}" class="btn btn-warning"><i class="fas fa-arrow-left fa-1x"></i></a>
 <div class="large-box" style="padding: 20px 0px;">
     <ul class="nav nav-tabs" id="myTab" role="tablist">
       <li class="nav-item" role="presentation">
@@ -37,27 +37,31 @@
     </ul>
     <div class="tab-content" id="myTabContent">
       <div class="tab-pane fade show active" id="member_info-pane" role="tabpanel" aria-labelledby="member_info" tabindex="0">
-          {% include 'users/tab1.html' %}
+          <div class="pt-4">
+              {% include 'users/tab1.html' %}
+          </div>
       </div>
-      <div class="tab-pane fade" id="car_visible-pane" role="tabpanel" aria-labelledby="car_visible" tabindex="0">
-          {% include 'users/tab2.html' %}
+      <div class="tab-pane fade" id="car_visible-pane" role="tabpanel" aria-labelledby="car_visible" tabindex="1">
+          <div class="pt-4">
+              {% include 'users/tab2.html' %}
+          </div>
       </div>
-      <div class="tab-pane fade" id="login_record-pane" role="tabpanel" aria-labelledby="login_record" tabindex="0">
+      <div class="tab-pane fade" id="login_record-pane" role="tabpanel" aria-labelledby="login_record" tabindex="2">
           {% include 'users/tab3.html' %}
       </div>
-      <div class="tab-pane fade" id="postponed_record-pane" role="tabpanel" aria-labelledby="postponed_record" tabindex="0">
+      <div class="tab-pane fade" id="postponed_record-pane" role="tabpanel" aria-labelledby="postponed_record" tabindex="3">
           {% include 'users/tab4.html' %}
       </div>
-      <div class="tab-pane fade" id="searching_record-pane" role="tabpanel" aria-labelledby="searching_record" tabindex="0">
+      <div class="tab-pane fade" id="searching_record-pane" role="tabpanel" aria-labelledby="searching_record" tabindex="4">
           {% include 'users/tab5.html' %}
       </div>
-      <div class="tab-pane fade" id="searching_record2-pane" role="tabpanel" aria-labelledby="searching_record2" tabindex="0">
+      <div class="tab-pane fade" id="searching_record2-pane" role="tabpanel" aria-labelledby="searching_record2" tabindex="5">
           {% include 'users/tab6.html' %}
       </div>
-      <div class="tab-pane fade" id="searching_record3-pane" role="tabpanel" aria-labelledby="searching_record3" tabindex="0">
+      <div class="tab-pane fade" id="searching_record3-pane" role="tabpanel" aria-labelledby="searching_record3" tabindex="6">
           {% include 'users/tab7.html' %}
       </div>
-      <div class="tab-pane fade" id="searching_record4-pane" role="tabpanel" aria-labelledby="searching_record4" tabindex="0">
+      <div class="tab-pane fade" id="searching_record4-pane" role="tabpanel" aria-labelledby="searching_record4" tabindex="7">
           {% include 'users/tab8.html' %}
       </div>
     </div>
@@ -80,6 +84,21 @@
 {% endblock js %}
 
 {% block ready %}
+    $('[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+      var target = $(e.target).text() // activated tab
+      //alert(e.target.id);
+        if(e.target.id=='postponed_record') {
+            $.ajax({
+                 url: '{% url 'postpone_record_api' %}', type: 'post',
+                 dataType: 'json',
+                 data: {"csrfmiddlewaretoken": "{{ csrf_token }}", "pk": {{ pk }}},
+                 success: function(data) {
+                     $('#postpone_record_html').html(data);
+                 }
+             });
+        }
+    });
+
     $('#submit_btn').click(function(event){
          event.preventDefault(); //so that we stop normal form submit.
          $.ajax({
@@ -92,21 +111,41 @@
          });
     });
 
+    function setPostoned_date(d1) {
+        var year = d1.getFullYear();
+        var month = d1.getMonth() + 1;
+        month = (month < 10?'0' : '') + month;
+        var day = d1.getDate();
+        day = (day < 10?'0' : '') + day;
+
+        strDate = year + '-' + month + '-' + day;
+        var is_save = confirm('是否要延長至'+strDate);
+        if(is_save) {
+             event.preventDefault(); //so that we stop normal form submit.
+             $.ajax({
+                 url: '{% url 'postponed_expire_api' %}', type: 'post',
+                 dataType: 'json',
+                 data: {"postponed_date": strDate, "csrfmiddlewaretoken": "{{ csrf_token }}", "pk": "{{ pk }}"},
+                 success: function(data) {
+                     alert(data);
+                     $("#expire_date").val(strDate)
+                 }
+             });
+        }
+    }
+
+
     $('#postponed_expire_date_for_months').click(function(){
-        alert('hello1');
-        event.preventDefault(); //so that we stop normal form submit.
-         $.ajax({
-             url: '{% url 'postponed_expire_api' %}', type: 'post',
-             dataType: 'json',
-             data: $('form#postponed_expire_date').serialize(),
-             success: function(data) {
-                 alert(data);
-             }
-         });
+        var d1 = new Date($("#expire_date").val());
+        d1.setMonth(d1.getMonth()+parseInt($("#postponed_months").val()));
+        setPostoned_date(d1);
+
     });
 
-    $('#postponed_expire_date').click(function(){
-        alert('hello2');
+    $('#postponed_expire_date_for_monthend').click(function(){
+        var vDate = new Date();
+        var d1 = new Date(vDate.getFullYear(), vDate.getMonth()+1, 0);
+        setPostoned_date(d1);
     });
 {% endblock ready %}
 

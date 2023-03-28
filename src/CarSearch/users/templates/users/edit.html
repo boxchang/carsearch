@@ -87,6 +87,7 @@
     $('[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
       var target = $(e.target).text() // activated tab
       //alert(e.target.id);
+        //延長紀錄
         if(e.target.id=='postponed_record') {
             $.ajax({
                  url: '{% url 'postpone_record_api' %}', type: 'post',
@@ -97,8 +98,45 @@
                  }
              });
         }
+
+        //登入紀錄
+        if(e.target.id=='login_record') {
+            $.ajax({
+                 url: '{% url 'login_record_api' %}', type: 'post',
+                 dataType: 'json',
+                 data: {"csrfmiddlewaretoken": "{{ csrf_token }}", "pk": {{ pk }}},
+                 success: function(data) {
+                     $('#login_record_html').html(data);
+                 }
+             });
+        }
+
+        //查詢紀錄
+        if(e.target.id=='searching_record') {
+            $.ajax({
+                 url: '{% url 'search_record_api' %}', type: 'post',
+                 dataType: 'json',
+                 data: {"csrfmiddlewaretoken": "{{ csrf_token }}", "pk": {{ pk }}},
+                 success: function(data) {
+                     $('#search_record_html').html(data);
+                 }
+             });
+        }
+
+        //上傳定位紀錄
+        if(e.target.id=='searching_record2') {
+            $.ajax({
+                 url: '{% url 'gps_upload_record_api' %}', type: 'post',
+                 dataType: 'json',
+                 data: {"csrfmiddlewaretoken": "{{ csrf_token }}", "pk": {{ pk }}},
+                 success: function(data) {
+                     $('#gps_upload_record_html').html(data);
+                 }
+             });
+        }
     });
 
+    //會員權限設定
     $('#submit_btn').click(function(event){
          event.preventDefault(); //so that we stop normal form submit.
          $.ajax({
@@ -111,6 +149,7 @@
          });
     });
 
+    //延長設定
     function setPostoned_date(d1) {
         var year = d1.getFullYear();
         var month = d1.getMonth() + 1;
@@ -134,7 +173,7 @@
         }
     }
 
-
+    //延長加N個月
     $('#postponed_expire_date_for_months').click(function(){
         var d1 = new Date($("#expire_date").val());
         d1.setMonth(d1.getMonth()+parseInt($("#postponed_months").val()));
@@ -142,6 +181,7 @@
 
     });
 
+    //延長到月底
     $('#postponed_expire_date_for_monthend').click(function(){
         var vDate = new Date();
         var d1 = new Date(vDate.getFullYear(), vDate.getMonth()+1, 0);

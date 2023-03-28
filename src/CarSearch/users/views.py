@@ -9,12 +9,15 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.urls import reverse
+
+from bases.utils import get_ip_address
 from bases.views import index
-from users.forms import CurrentCustomUserForm, CustomUser
+from jobs.models import FileJob
+from users.forms import CurrentCustomUserForm, CustomUser, LoginRecord
 from django.http import JsonResponse
 from django.db.models import Q
 
-from users.models import PostponeRecord
+from users.models import PostponeRecord, SearchRecord
 
 
 def add_permission(user, codename):
@@ -36,33 +39,33 @@ def postponed_expire_api(request):
         if request.POST.get('postponed_date'):
             postponed_date = request.POST.get('postponed_date')
 
-        msg = str(postponed_date) + "延期更新失敗"
+        msg = ""
 
         if request.POST.get('pk'):
-            pk = request.POST.get('pk')
-            user = CustomUser.objects.get(pk=pk)
-            old_expired_date = user.expired_date
-            new_expired_date = datetime.datetime.strptime(postponed_date+' 23:59:59', '%Y-%m-%d %H:%M:%S')
-            user.expired_date = new_expired_date
-            user.update_by = request.user
-            user.save()
+            try:
+                pk = request.POST.get('pk')
+                user = CustomUser.objects.get(pk=pk)
+                old_expired_date = user.expired_date
+                new_expired_date = datetime.datetime.strptime(postponed_date+' 23:59:59', '%Y-%m-%d %H:%M:%S')
+                user.expired_date = new_expired_date
+                user.update_by = request.user
+                user.save()
 
-            #Log
-            x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-            if x_forwarded_for:
-                ip = x_forwarded_for.split(',')[0]
-            else:
-                ip = request.META.get('REMOTE_ADDR')
+                #Log
+                ip = get_ip_address(request)
 
-            record = PostponeRecord()
-            record.manager = request.user
-            record.owner = user
-            record.before_date = datetime.datetime.strftime(old_expired_date, "%Y-%m-%d")
-            record.after_date = postponed_date
-            record.ip_addr = ip
-            record.save()
+                record = PostponeRecord()
+                record.manager = request.user
+                record.user = user
+                record.before_date = datetime.datetime.strftime(old_expired_date, "%Y-%m-%d")
+                record.after_date = postponed_date
+                record.ip_addr = ip
+                record.save()
+                msg = str(postponed_date) + "權限更新完成"
 
-            msg = str(postponed_date)+"權限更新完成"
+            except:
+                msg = str(postponed_date) + "延期更新失敗"
+
         return JsonResponse(msg, safe=False)
 
 # Ajax API
@@ -73,7 +76,7 @@ def postpone_record_api(request):
         pk = request.POST.get('pk')
 
         # 延長紀錄
-        records = PostponeRecord.objects.filter(owner=pk)
+        records = PostponeRecord.objects.filter(user=pk)
 
         index = 1
         for record in records:
@@ -81,17 +84,93 @@ def postpone_record_api(request):
             html += """
             <tr>
                 <th scope="row" class="text-center">{index}</th>
-                <td class="text-center">{owner}</td>
+                <td class="text-center">{user}</td>
                 <td class="text-center">{before_date}</td>
                 <td class="text-center">{after_date}</td>
                 <td class="text-center">{ip_addr}</td>
                 <td class="text-center">{create_at}</td>
             </tr>
-            """.format(index=index, owner=record.owner, before_date=record.before_date, after_date=record.after_date,
+            """.format(index=index, user=record.user, before_date=record.before_date, after_date=record.after_date,
                        ip_addr=record.ip_addr, create_at=create_at)
             index += 1
 
     return JsonResponse(html, safe=False)
+
+# Ajax API
+@login_required
+def login_record_api(request):
+    html = ""
+    if request.method == 'POST':
+        pk = request.POST.get('pk')
+
+        # 延長紀錄
+        records = LoginRecord.objects.filter(user=pk)
+
+        index = 1
+        for record in records:
+            create_at = datetime.datetime.strftime(record.create_at, "%Y-%m-%d %H:%M:%S")
+            html += """
+            <tr>
+                <th scope="row" class="text-center">{index}</th>
+                <td class="text-center">{create_at}</td>
+                <td class="text-center">{ip_addr}</td>
+            </tr>
+            """.format(index=index, ip_addr=record.ip_addr, create_at=create_at)
+            index += 1
+
+    return JsonResponse(html, safe=False)
+
+
+# Ajax API
+@login_required
+def search_record_api(request):
+    html = ""
+    if request.method == 'POST':
+        pk = request.POST.get('pk')
+
+        # 延長紀錄
+        records = SearchRecord.objects.filter(user=pk)
+
+        index = records.count()
+        for record in records:
+            create_at = datetime.datetime.strftime(record.create_at, "%Y-%m-%d %H:%M:%S")
+            html += """
+            <tr>
+                <th scope="row" class="text-center">{index}</th>
+                <td class="text-center">{words}</td>
+                <td class="text-center">{match_count}</td>
+                <td class="text-center">{create_at}</td>
+            </tr>
+            """.format(index=index, words=record.words, match_count=record.match_count,
+                       create_at=create_at)
+            index -= 1
+
+    return JsonResponse(html, safe=False)
+
+
+# Ajax API
+@login_required
+def gps_upload_record_api(request):
+    html = ""
+    if request.method == 'POST':
+        pk = request.POST.get('pk')
+
+        # 延長紀錄
+        records = FileJob.objects.filter(create_by=pk, file_type='GPS').order_by('-create_at')
+
+        index = records.count()
+        for record in records:
+            create_at = datetime.datetime.strftime(record.create_at, "%Y-%m-%d %H:%M:%S")
+            html += """
+            <tr>
+                <td class="text-center">{create_at}</td>
+                <td class="text-center">{success}</td>
+            </tr>
+            """.format(success=record.success, create_at=create_at)
+            index -= 1
+
+    return JsonResponse(html, safe=False)
+
 
 # Ajax API
 @login_required
@@ -453,6 +532,14 @@ def login(request):
                 response.delete_cookie("password")
             # login success
             auth_login(request, user)
+
+            # login log
+            ip = get_ip_address(request)
+            record = LoginRecord()
+            record.user = user
+            record.ip_addr = ip
+            record.save()
+
 
             # messages.success(request, '登入成功')
 

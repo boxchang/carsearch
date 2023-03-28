@@ -22,13 +22,28 @@ class UserType(models.Model):
 
 
 class PostponeRecord(models.Model):
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING,
-                                  related_name='postpone_user_postpone')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING,
+                                  related_name='user_postpone')
     manager = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING,
-                                related_name='postpone_manager_postpone')
+                                related_name='manager_postpone')
     before_date = models.TextField(_('展延前到期日'), max_length=10, null=False, blank=False)
     after_date = models.TextField(_('展延後到期日'), max_length=10, null=False, blank=False)
     ip_addr = models.TextField(_('操作IP位置'), max_length=15, null=False, blank=False)
+    create_at = models.DateTimeField(auto_now_add=True, editable=True)
+
+
+class LoginRecord(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING,
+                              related_name='user_login')
+    ip_addr = models.TextField(_('登入IP'), max_length=15, null=False, blank=False)
+    create_at = models.DateTimeField(auto_now_add=True, editable=True)
+
+
+class SearchRecord(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING,
+                             related_name='user_search')
+    words = models.CharField(max_length=50)  # 車號
+    match_count = models.IntegerField()
     create_at = models.DateTimeField(auto_now_add=True, editable=True)
 
 

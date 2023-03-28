@@ -1,0 +1,31 @@
+{% extends 'bases/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+    上傳車單
+{% endblock %}
+{% block container %}
+    <div style="height: 600px">
+        <fieldset class="scheduler-border pt-5 pb-5">
+            <legend class="scheduler-border">上傳車單</legend>
+            <form action="{% url 'car_upload' %}" method="post" class="form-group font-weight-bold align-middle" id="car_form" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ upload_form.as_p }}
+                <div style="text-align: center">
+                    <button type="submit" class="btn btn-primary" id="send">點擊上傳</button>
+                </div>
+            </form>
+        </fieldset>
+        <fieldset class="scheduler-border pb-5">
+            <legend class="scheduler-border">下載車單</legend>
+            <form action="{% url 'car_upload' %}" method="post" class="form-group font-weight-bold align-middle" id="car_form" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% crispy download_form %}
+                <p>
+                <div style="text-align: center">
+                    <button type="submit" class="btn btn-primary" id="send">點擊下載</button>
+                </div>
+            </form>
+        </fieldset>
+    </div>
+
+{% endblock container %}

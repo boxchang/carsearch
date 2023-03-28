@@ -151,3 +151,7 @@ LOGIN_URL = '/users/login/'
 AUTH_USER_MODEL = 'users.CustomUser'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+GPS_FILE_ROOT = os.path.join(MEDIA_ROOT, 'gps_files\\')
+
+CAR_FILE_ROOT = os.path.join(MEDIA_ROOT, 'car_files\\')

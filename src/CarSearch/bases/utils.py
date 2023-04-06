@@ -85,9 +85,9 @@ def get_ip_address(request):
     return ip
 
 
-def downloadDbfFile(fileName, sql):
+def downloadDbfFile(file_name, sql):
     try:
-        new_table = dbf.Table(fileName,
+        new_table = dbf.Table(file_name,
                               'CARNO_2 C(8); NO_2 C(4); DATE_2 D; TIME_2 C(5); ADDR_2 C(30); GPS_2A N(10,4); '
                               'GPS_2B N(10,4); MARK_2 L; SALES_2 C(12); BINGO_2 D; UPDATE_2 D', codepage='cp950')
 
@@ -116,5 +116,6 @@ def downloadDbfFile(fileName, sql):
                               'GPS_2B': row['GPS_2B'], 'MARK_2': bool(row['MARK_2']),
                               'SALES_2': row['SALES_2'], 'BINGO_2': row['BINGO_2'], 'UPDATE_2': row['UPDATE_2']})
             i += 1
+        new_table.close()
     except:
         print("downloadDbfFile Fail!")

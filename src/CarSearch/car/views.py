@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from CarSearch.settings.base import MEDIA_ROOT
 from bases.utils import FileUploadJob
-from car.forms import FileUploadForm, FileDownloadForm
+from car.forms import FileUploadForm
 from car.models import Car
 from gps.models import GPS
 from jobs.models import FileJob, JobStatus
@@ -129,7 +129,7 @@ class SearchCondition(object):
 @login_required
 def car_data_update(request):
     upload_form = FileUploadForm()
-    download_form = FileDownloadForm()
+
     return render(request, 'car/data_update.html', locals())
 
 

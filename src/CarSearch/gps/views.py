@@ -1,7 +1,8 @@
-from django.contrib.auth.models import User
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from CarSearch.settings.base import MEDIA_ROOT
-from bases.utils import FileUploadJob, downloadDbfFile
+from bases.utils import downloadDbfFile
+from CarSearch.settings.base import MEDIA_ROOT, GPS_FILE_ROOT
+from bases.utils import FileUploadJob
 from car.forms import FileUploadForm
 from gps.forms import FileDownloadForm
 from jobs.models import FileJob, JobStatus
@@ -9,9 +10,9 @@ import dbfread
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 import threading
-
 from tasks.gps_upload import GPS_Upload
 from users.models import CustomUser
+import os
 
 
 @login_required
@@ -31,10 +32,14 @@ def delete(request):
 @login_required
 def download(request):
     if request.method == 'POST':
-
-        downloadDbfFile()
-
-    return render(request, 'gps/data_update.html', locals())
+        sql = "select * from gps_gps"
+        file_name = GPS_FILE_ROOT + 'gps_temp.dbf'
+        downloadDbfFile(file_name , sql)
+        with open(file_name, "rb") as fprb:
+            response = HttpResponse(fprb.read(), content_type='application/x-dbf')
+            response['Content-Disposition'] = 'attachment; filename=' + file_name
+        os.remove(file_name)
+        return response
 
 
 @login_required

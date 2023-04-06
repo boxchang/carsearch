@@ -19,8 +19,6 @@ sql = "select * from gps_gps"
 rows = Cursor2Dict(conn, sql)
 i = 0
 for row in rows:
-    if i==322:
-        print("xxx")
     if row['BINGO_2'] == 'None':
         row['BINGO_2'] = None
     else:

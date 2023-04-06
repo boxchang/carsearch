@@ -6,5 +6,4 @@ urlpatterns = [
     url(r'^upload/$', upload, name='gps_upload'),
     url(r'^download/$', download, name='gps_download'),
     url(r'^delete/$', delete, name='gps_delete'),
-
 ]

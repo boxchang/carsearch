@@ -433,7 +433,6 @@ def user_edit(request):
 def user_list(request):
     template = 'users/list.html'
 
-
     user_keyword = ""
 
     query = Q(user_type__isnull=False)  # 排除超級管理者

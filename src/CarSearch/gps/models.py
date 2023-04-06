@@ -17,10 +17,15 @@ class GPS(models.Model):
     BINGO_2 = models.CharField(max_length=50)
     UPDATE_2 = models.CharField(max_length=50)
 
-
     class Meta:
         unique_together = ('CARNO_2', 'DATE_2', 'TIME_2')
 
-
     def __str__(self):
         return self.CARNO_2
+
+
+class GPSOwner(models.Model):
+    SALES_2 = models.CharField(max_length=50)
+    create_at = models.DateTimeField(default=timezone.now)
+    create_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING,
+                                  related_name='gps_owner_create_at')

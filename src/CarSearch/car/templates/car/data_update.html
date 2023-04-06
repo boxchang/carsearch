@@ -11,18 +11,15 @@
                 {% csrf_token %}
                 {{ upload_form.as_p }}
                 <div style="text-align: center">
-                    <button type="submit" class="btn btn-primary" id="send">點擊上傳</button>
+                    <button type="submit" class="btn btn-primary" id="send" style="width: 100%;">點擊上傳</button>
                 </div>
             </form>
         </fieldset>
         <fieldset class="scheduler-border pb-5">
             <legend class="scheduler-border">下載車單</legend>
-            <form action="{% url 'car_upload' %}" method="post" class="form-group font-weight-bold align-middle" id="car_form" enctype="multipart/form-data">
-                {% csrf_token %}
-                {% crispy download_form %}
-                <p>
+            <form action="{% url 'car_download' %}" method="post" class="form-group font-weight-bold align-middle" id="car_form" enctype="multipart/form-data">
                 <div style="text-align: center">
-                    <button type="submit" class="btn btn-primary" id="send">點擊下載</button>
+                    <button type="submit" class="btn btn-primary" id="send" style="width: 100%;">點擊下載</button>
                 </div>
             </form>
         </fieldset>

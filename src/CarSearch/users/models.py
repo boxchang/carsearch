@@ -171,6 +171,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
         )
 
+    def __str__(self):
+        return self.nickname
 
     def email_user(self, subject, message, from_email=None):
         """

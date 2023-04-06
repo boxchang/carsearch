@@ -22,7 +22,7 @@ class GPS_Upload(object):
     '''
     新增DBF資料
     '''
-    def insertDbfFile(self,batch_no, filename):
+    def insertDbfFile(self, batch_no, filename):
         table = dbfread.DBF(filename)
         self.log("Start Insert")
         print(len(table))

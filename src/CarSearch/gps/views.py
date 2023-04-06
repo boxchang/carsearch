@@ -1,6 +1,7 @@
+import datetime
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from bases.utils import downloadDbfFile
+from bases.utils import MakeDbfFile
 from CarSearch.settings.base import MEDIA_ROOT, GPS_FILE_ROOT
 from bases.utils import FileUploadJob
 from car.forms import FileUploadForm
@@ -32,13 +33,24 @@ def delete(request):
 @login_required
 def download(request):
     if request.method == 'POST':
-        sql = "select * from gps_gps"
-        file_name = GPS_FILE_ROOT + 'gps_temp.dbf'
-        downloadDbfFile(file_name , sql)
-        with open(file_name, "rb") as fprb:
+        sales = request.POST.get('sales')
+        data_date_start = request.POST.get('data_date_start')
+        data_date_end = request.POST.get('data_date_end')
+        sql = "select * from gps_gps where SALES_2 = '{SALES_2}' AND DATE_2 BETWEEN '{data_date_start}' AND '{data_date_end}'"\
+            .format(SALES_2=sales, data_date_start=data_date_start, data_date_end=data_date_end)
+
+        if not os.path.isdir(GPS_FILE_ROOT):
+            os.mkdir(GPS_FILE_ROOT)
+
+        now = datetime.datetime.now()
+        time_series = datetime.datetime.strftime(now, '%Y%m%d%H%M%S')
+        file_name = 'gps_{time_series}.dbf'.format(time_series=time_series)
+        file_path = GPS_FILE_ROOT + file_name
+        MakeDbfFile(file_path, sql)
+        with open(file_path, "rb") as fprb:
             response = HttpResponse(fprb.read(), content_type='application/x-dbf')
             response['Content-Disposition'] = 'attachment; filename=' + file_name
-        os.remove(file_name)
+        os.remove(file_path)
         return response
 
 

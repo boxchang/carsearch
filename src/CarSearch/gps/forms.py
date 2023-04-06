@@ -19,7 +19,8 @@ class FileUploadForm(forms.Form):
 
 
 class FileDownloadForm(forms.Form):
-    sales = forms.ModelChoiceField(required=False, label="SALES", queryset=CustomUser.objects.filter(user_type__isnull=False),
+    sales = forms.ModelChoiceField(required=False, label="SALES",
+                                   queryset=CustomUser.objects.filter(user_type__isnull=False), to_field_name="nickname",
                                    widget=forms.Select(attrs={'class': "form-select"}))
     data_date_start = forms.CharField(required=False, label="時間(起)")
     data_date_end = forms.CharField(required=False, label="時間(迄)")

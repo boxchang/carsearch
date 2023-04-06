@@ -6,6 +6,7 @@ from CarSearch.settings.base import MEDIA_ROOT, GPS_FILE_ROOT
 from bases.utils import FileUploadJob
 from car.forms import FileUploadForm
 from gps.forms import FileDownloadForm
+from gps.models import GPS
 from jobs.models import FileJob, JobStatus
 import dbfread
 from django.urls import reverse
@@ -27,6 +28,19 @@ def gps_data_update(request):
 def delete(request):
     upload_form = FileUploadForm()
     download_form = FileDownloadForm()
+    if request.method == 'POST':
+        try:
+            sales = request.POST.get('sales')
+            data_date_start = request.POST.get('data_date_start')
+            data_date_end = request.POST.get('data_date_end')
+            data = GPS.objects.filter(SALES_2=sales, DATE_2__range=(data_date_start, data_date_end))
+            if data.all().count() > 0:
+                data.delete()
+                delete_result = True
+            else:
+                delete_result = None
+        except:
+            delete_result = False
     return render(request, 'gps/data_update.html', locals())
 
 

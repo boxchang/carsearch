@@ -37,8 +37,8 @@ class FileUploadJob(object):
 
 
     def filejob_start_update(self, batch_no, status_id, count):
-        now = datetime.now()
-        self.start_time = datetime.strftime(now, '%Y-%m-%d %H:%M:%S')
+        now = datetime.datetime.now()
+        self.start_time = datetime.datetime.strftime(now, '%Y-%m-%d %H:%M:%S')
         db = database()
         sql = """update jobs_filejob set status_id = '{status_id}', success={count}, start_time='{start_time}' where batch_no = '{batch_no}'""".format(
             status_id=status_id, count=count, batch_no=batch_no, start_time=self.start_time
@@ -48,10 +48,10 @@ class FileUploadJob(object):
 
 
     def filejob_end_update(self, batch_no, status_id, count):
-        now = datetime.now()
-        start_time = datetime.strptime(self.start_time, '%Y-%m-%d %H:%M:%S')
+        now = datetime.datetime.now()
+        start_time = datetime.datetime.strptime(self.start_time, '%Y-%m-%d %H:%M:%S')
         exe_time = now - start_time
-        end_time = datetime.strftime(now, '%Y-%m-%d %H:%M:%S')
+        end_time = datetime.datetime.strftime(now, '%Y-%m-%d %H:%M:%S')
         db = database()
         sql = """update jobs_filejob set status_id = '{status_id}', success={count}, end_time='{end_time}', exe_time={exe_time} where batch_no = '{batch_no}'""".format(
             status_id=status_id, count=count, batch_no=batch_no, end_time=end_time, exe_time=exe_time.seconds

@@ -13,7 +13,6 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 import threading
 from tasks.gps_upload import GPS_Upload
-from users.models import CustomUser
 import os
 
 

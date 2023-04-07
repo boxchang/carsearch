@@ -76,19 +76,16 @@ class CAR_Upload(object):
         cursor = connection.cursor()
         sql = "delete from car_cartemp"
         cursor.execute(sql)
-        transaction.commit_unless_managed()
 
     def clean_car_data(self):
         cursor = connection.cursor()
         sql = """DELETE FROM car_car"""
         cursor.execute(sql)
-        transaction.commit_unless_managed()
 
     def insert_car_data(self):
         cursor = connection.cursor()
         sql = """INSERT INTO car_car SELECT * FROM car_cartemp"""
         cursor.execute(sql)
-        transaction.commit_unless_managed()
 
 
 

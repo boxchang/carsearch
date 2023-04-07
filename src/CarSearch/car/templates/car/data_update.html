@@ -27,3 +27,11 @@
     </div>
 
 {% endblock container %}
+
+{% block js %}
+    <script>
+        if("{{ is_uploading_flag }}"=="Y") {
+            alert("目前有車單資料上傳中，無法再上傳檔案，如有問題請連絡系統管理員");
+        }
+    </script>
+{% endblock js %}

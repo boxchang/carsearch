@@ -15,6 +15,7 @@ from tasks.car_upload import CAR_Upload
 from users.models import SearchRecord, CarDownloadRecord
 import datetime
 from django.http import HttpResponse
+from django.db.models import Q
 
 
 @login_required
@@ -160,33 +161,41 @@ def download(request):
         os.remove(file_path)
         return response
 
+def is_uploading():
+    rows = FileJob.objects.filter(status__in=[1, 2]).all()  # On-Going
+    if rows.count() > 0:
+        return True
+    else:
+        return False
 
 @login_required
 def upload(request):
-    if request.method == 'POST':
-        form = FileUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            # get cleaned data
-            raw_file = form.cleaned_data.get("file")
-            fileJob = FileJob()
-            fileJob.file_type = "CAR"
-            batch_no, file_path = FileUploadJob().handle_uploaded_file(raw_file)
-            fileJob.batch_no = batch_no
-            fileJob.file = file_path
-            table = dbfread.DBF(MEDIA_ROOT + file_path)
-            fileJob.count = len(table)
-            fileJob.status = JobStatus.objects.get(id=1)  # WAIT
-            fileJob.create_by = request.user
-            fileJob.save()
+    if not is_uploading():
+        if request.method == 'POST':
+            form = FileUploadForm(request.POST, request.FILES)
+            if form.is_valid():
+                # get cleaned data
+                raw_file = form.cleaned_data.get("file")
+                fileJob = FileJob()
+                fileJob.file_type = "CAR"
+                batch_no, file_path = FileUploadJob().handle_uploaded_file(raw_file)
+                fileJob.batch_no = batch_no
+                fileJob.file = file_path
+                table = dbfread.DBF(MEDIA_ROOT + file_path)
+                fileJob.count = len(table)
+                fileJob.status = JobStatus.objects.get(id=1)  # WAIT
+                fileJob.create_by = request.user
+                fileJob.save()
 
-            t = threading.Thread(target=run_upload)
-            t.setDaemon(True)  # 主線程不管子線程的結果
-            t.start()
+                t = threading.Thread(target=run_upload)
+                t.setDaemon(True)  # 主線程不管子線程的結果
+                t.start()
 
-            return redirect(reverse('job_detail'))
+                return redirect(reverse('job_detail'))
     else:
-        form = FileUploadForm()
+        is_uploading_flag = "Y"
 
+    upload_form = FileUploadForm()
     return render(request, 'car/data_update.html', locals())
 
 

@@ -6,20 +6,21 @@
 {% block container %}
     <div style="height: 600px">
         <fieldset class="scheduler-border pt-5 pb-5">
-            <legend class="scheduler-border">上傳車單</legend>
+            <legend class="scheduler-border">點擊上傳車單資料(*.dbf)</legend>
             <form action="{% url 'car_upload' %}" method="post" class="form-group font-weight-bold align-middle" id="car_form" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ upload_form.as_p }}
                 <div style="text-align: center">
-                    <button type="submit" class="btn btn-primary" id="send" style="width: 100%;">點擊上傳</button>
+                    <button type="submit" class="btn btn-primary" id="send" style="border-color: #28a745;background-color: #28a745; width: 100%;">點擊上傳</button>
                 </div>
             </form>
         </fieldset>
         <fieldset class="scheduler-border pb-5">
-            <legend class="scheduler-border">下載車單</legend>
+            <legend class="scheduler-border">點擊下載車單資料(*.dbf)</legend>
             <form action="{% url 'car_download' %}" method="post" class="form-group font-weight-bold align-middle" id="car_form" enctype="multipart/form-data">
+                {% csrf_token %}
                 <div style="text-align: center">
-                    <button type="submit" class="btn btn-primary" id="send" style="width: 100%;">點擊下載</button>
+                    <button type="submit" class="btn btn-primary" id="send" style="border-color: #007bff;background-color: #007bff; width: 100%;">點擊下載</button>
                 </div>
             </form>
         </fieldset>

@@ -17,7 +17,7 @@ from users.forms import CurrentCustomUserForm, CustomUser, LoginRecord
 from django.http import JsonResponse
 from django.db.models import Q
 
-from users.models import PostponeRecord, SearchRecord
+from users.models import PostponeRecord, SearchRecord, CarDownloadRecord
 
 
 def add_permission(user, codename):
@@ -104,7 +104,7 @@ def login_record_api(request):
         pk = request.POST.get('pk')
 
         # 延長紀錄
-        records = LoginRecord.objects.filter(user=pk)
+        records = LoginRecord.objects.filter(user=pk).order_by('-create_at')
 
         index = 1
         for record in records:
@@ -155,7 +155,7 @@ def gps_upload_record_api(request):
     if request.method == 'POST':
         pk = request.POST.get('pk')
 
-        # 延長紀錄
+        # GPS上傳紀錄
         records = FileJob.objects.filter(create_by=pk, file_type='GPS').order_by('-create_at')
 
         index = records.count()
@@ -167,6 +167,52 @@ def gps_upload_record_api(request):
                 <td class="text-center">{success}</td>
             </tr>
             """.format(success=record.success, create_at=create_at)
+            index -= 1
+
+    return JsonResponse(html, safe=False)
+
+# Ajax API
+@login_required
+def photo_upload_record_api(request):
+    html = ""
+    if request.method == 'POST':
+        pk = request.POST.get('pk')
+
+        # GPS上傳紀錄
+        records = FileJob.objects.filter(create_by=pk, file_type='GPS').order_by('-create_at')
+
+        index = records.count()
+        for record in records:
+            create_at = datetime.datetime.strftime(record.create_at, "%Y-%m-%d %H:%M:%S")
+            html += """
+            <tr>
+                <td class="text-center">{create_at}</td>
+                <td class="text-center">{success}</td>
+            </tr>
+            """.format(success=record.success, create_at=create_at)
+            index -= 1
+
+    return JsonResponse(html, safe=False)
+
+# Ajax API
+@login_required
+def car_download_record_api(request):
+    html = ""
+    if request.method == 'POST':
+        pk = request.POST.get('pk')
+
+        # GPS上傳紀錄
+        records = CarDownloadRecord.objects.filter(user=pk).order_by('-create_at')
+
+        index = records.count()
+        for record in records:
+            create_at = datetime.datetime.strftime(record.create_at, "%Y-%m-%d %H:%M:%S")
+            html += """
+                <tr>
+                    <td class="text-center">{create_at}</td>
+                    <td class="text-center">{down_count}</td>
+                </tr>
+                """.format(down_count=record.down_count, create_at=create_at)
             index -= 1
 
     return JsonResponse(html, safe=False)

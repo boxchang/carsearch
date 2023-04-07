@@ -55,18 +55,15 @@
                     <div class="form-group text-center pt-3">
                         <input type="button" value="登入" class="btn login_btn" onclick="submit('login_form');">
                     </div>
-
-                </div>
-                <div class="card-footer">
-                    {% if messages %}
-                        <div class="float-left">
-                            <ul class="messages">
-                                {% for message in messages %}
-                                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    {% endif %}
+                {% if messages %}
+                    <div>
+                        <ul class="messages">
+                            {% for message in messages %}
+                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
                 </div>
             </div>
         </div>

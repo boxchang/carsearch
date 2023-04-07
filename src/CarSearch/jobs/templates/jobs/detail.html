@@ -9,12 +9,15 @@ function refresh()
 {
     window.location.reload();
 }
-setTimeout('refresh()',10000); //指定1秒刷新一次
+//setTimeout('refresh()',10000); //指定1秒刷新一次
 </script>
 {% endblock js %}
 
 {% block container %}
 {% if jobs %}
+<div class="pb-3">
+    <button type="button" class="btn btn-primary" id="refresh" style="width: 100%;" onclick="refresh()">點擊查看進度</button>
+</div>
 <table class="table table-bordered table-sm">
     <thead class="table-dark">
         <tr>
@@ -71,5 +74,7 @@ setTimeout('refresh()',10000); //指定1秒刷新一次
     {% endfor %}
     </tbody>
 </table>
+{% else %}
+    <div>目前無任何資料上傳</div>
 {% endif %}
 {% endblock container %}

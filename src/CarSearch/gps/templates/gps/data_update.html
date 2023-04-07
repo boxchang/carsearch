@@ -11,7 +11,7 @@
                 {% csrf_token %}
                 {{ upload_form.as_p }}
                 <div style="text-align: center;">
-                    <button type="submit" class="btn btn-primary" id="send" style="width: 100%;">點擊上傳</button>
+                    <button type="submit" class="btn btn-primary" id="send" style="border-color: #28a745; background-color: #28a745; width: 100%;">點擊上傳定位資料(*.dbf)</button>
                 </div>
             </form>
         </fieldset>
@@ -22,7 +22,7 @@
                 {% crispy download_form %}
                 <p>
                 <div style="text-align: center">
-                    <button type="submit" class="btn btn-primary" id="send" style="width: 100%;">點擊下載</button>
+                    <button type="submit" class="btn btn-primary" id="send" style="border-color: #007bff; background-color: #007bff; width: 100%;">點擊下載定位資料(*.dbf)</button>
                 </div>
             </form>
         </fieldset>
@@ -33,7 +33,7 @@
                 {% crispy download_form %}
                 <p>
                 <div style="text-align: center">
-                    <button type="submit" class="btn btn-primary" id="send" style="width: 100%;">點擊刪除</button>
+                    <button type="submit" class="btn btn-primary" id="send" style="border-color: #dc3545; background-color: #dc3545; width: 100%;" onclick="return confirm('確定要刪除資料?')">點擊刪除定位資料</button>
                 </div>
             </form>
         </fieldset>

@@ -1,4 +1,4 @@
 import dbf
 
-table = dbf.Table('_temp.dbf')
+table = dbf.Table('car2.dbf')
 table.open()

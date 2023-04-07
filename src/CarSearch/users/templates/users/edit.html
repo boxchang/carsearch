@@ -134,6 +134,30 @@
                  }
              });
         }
+
+        //上傳定位照片紀錄
+        if(e.target.id=='searching_record3') {
+            $.ajax({
+                 url: '{% url 'photo_upload_record_api' %}', type: 'post',
+                 dataType: 'json',
+                 data: {"csrfmiddlewaretoken": "{{ csrf_token }}", "pk": {{ pk }}},
+                 success: function(data) {
+                     $('#photo_upload_record_html').html(data);
+                 }
+             });
+        }
+
+        //車單下載紀錄
+        if(e.target.id=='searching_record4') {
+            $.ajax({
+                 url: '{% url 'car_download_record_api' %}', type: 'post',
+                 dataType: 'json',
+                 data: {"csrfmiddlewaretoken": "{{ csrf_token }}", "pk": {{ pk }}},
+                 success: function(data) {
+                     $('#car_download_record_html').html(data);
+                 }
+             });
+        }
     });
 
     //會員權限設定

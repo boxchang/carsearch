@@ -47,6 +47,13 @@ class SearchRecord(models.Model):
     create_at = models.DateTimeField(auto_now_add=True, editable=True)
 
 
+class CarDownloadRecord(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING,
+                             related_name='user_cardown')
+    down_count = models.IntegerField()
+    create_at = models.DateTimeField(auto_now_add=True, editable=True)
+
+
 class CustomUserManager(BaseUserManager):
 
     def _create_user(self, username, password,

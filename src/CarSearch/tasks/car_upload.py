@@ -3,6 +3,7 @@ from datetime import datetime
 from CarSearch.settings.base import MEDIA_ROOT
 from bases.database import database
 from bases.utils import Cursor2Dict, FileUploadJob
+from django.db import connection, transaction
 
 
 class CAR_Upload(object):
@@ -40,7 +41,7 @@ class CAR_Upload(object):
         fields_str = ','.join(db_fields)
         fields_sql = "(batch_no, CARNO2, {colums})".format(colums=fields_str)
 
-        init_sql = "INSERT INTO car_car {colums} VALUES ".format(colums=fields_sql)
+        init_sql = "INSERT INTO car_cartemp {colums} VALUES ".format(colums=fields_sql)
         values_sql = init_sql
         for record in table:
             CARNO2 = str(record['CARNO']).replace('-', '')
@@ -49,7 +50,7 @@ class CAR_Upload(object):
                 values_sql = init_sql  # 初始化
 
             values_str = ','.join("'{value}'".format(value=str(record[field]).replace("'", "''")) for field in fields)
-            values_sql += "('{batch_no}',{CARNO2},{value}),".format(batch_no=batch_no, CARNO2=CARNO2, value=values_str)
+            values_sql += "('{batch_no}','{CARNO2}',{value}),".format(batch_no=batch_no, CARNO2=CARNO2, value=values_str)
             count += 1
 
         db.execute_sql(values_sql[:-1])
@@ -57,7 +58,7 @@ class CAR_Upload(object):
         return count
 
 
-    def execute(self):
+    def execute_job(self):
         upload = FileUploadJob()
         db = database()
         conn = db.create_connection()
@@ -71,11 +72,23 @@ class CAR_Upload(object):
             count = self.insertDbfFile(batch_no, file_path)
             upload.filejob_end_update(batch_no, '3', count)  # DONE
 
-    def delete_car_data(self):
-        db = database()
-        sql = "delete from car_car"
-        db.execute_sql(sql)
+    def clean_car_temp_data(self):
+        cursor = connection.cursor()
+        sql = "delete from car_cartemp"
+        cursor.execute(sql)
+        transaction.commit_unless_managed()
 
+    def clean_car_data(self):
+        cursor = connection.cursor()
+        sql = """DELETE FROM car_car"""
+        cursor.execute(sql)
+        transaction.commit_unless_managed()
+
+    def insert_car_data(self):
+        cursor = connection.cursor()
+        sql = """INSERT INTO car_car SELECT * FROM car_cartemp"""
+        cursor.execute(sql)
+        transaction.commit_unless_managed()
 
 
 

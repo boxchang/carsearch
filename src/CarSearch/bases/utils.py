@@ -37,8 +37,8 @@ class FileUploadJob(object):
 
 
     def filejob_start_update(self, batch_no, status_id, count):
-        now = datetime.now()
-        self.start_time = datetime.strftime(now, '%Y-%m-%d %H:%M:%S')
+        now = datetime.datetime.now()
+        self.start_time = datetime.datetime.strftime(now, '%Y-%m-%d %H:%M:%S')
         db = database()
         sql = """update jobs_filejob set status_id = '{status_id}', success={count}, start_time='{start_time}' where batch_no = '{batch_no}'""".format(
             status_id=status_id, count=count, batch_no=batch_no, start_time=self.start_time
@@ -48,10 +48,10 @@ class FileUploadJob(object):
 
 
     def filejob_end_update(self, batch_no, status_id, count):
-        now = datetime.now()
-        start_time = datetime.strptime(self.start_time, '%Y-%m-%d %H:%M:%S')
+        now = datetime.datetime.now()
+        start_time = datetime.datetime.strptime(self.start_time, '%Y-%m-%d %H:%M:%S')
         exe_time = now - start_time
-        end_time = datetime.strftime(now, '%Y-%m-%d %H:%M:%S')
+        end_time = datetime.datetime.strftime(now, '%Y-%m-%d %H:%M:%S')
         db = database()
         sql = """update jobs_filejob set status_id = '{status_id}', success={count}, end_time='{end_time}', exe_time={exe_time} where batch_no = '{batch_no}'""".format(
             status_id=status_id, count=count, batch_no=batch_no, end_time=end_time, exe_time=exe_time.seconds
@@ -85,7 +85,7 @@ def get_ip_address(request):
     return ip
 
 
-def MakeDbfFile(file_name, sql):
+def MakeGPSDbfFile(file_name, sql):
     new_table = dbf.Table(file_name,
                           'CARNO_2 C(8); NO_2 C(4); DATE_2 D; TIME_2 C(5); ADDR_2 C(30); GPS_2A N(10,4); '
                           'GPS_2B N(10,4); MARK_2 L; SALES_2 C(12); BINGO_2 D; UPDATE_2 D', codepage='cp950')
@@ -97,6 +97,7 @@ def MakeDbfFile(file_name, sql):
     rows = Cursor2Dict(conn, sql)
     i = 0
     for row in rows:
+        # 資料整理
         if row['BINGO_2'] == 'None':
             row['BINGO_2'] = None
         else:
@@ -107,6 +108,7 @@ def MakeDbfFile(file_name, sql):
         else:
             row['UPDATE_2'] = datetime.datetime.strptime(row['UPDATE_2'], '%Y-%m-%d')
 
+        # 轉成Tuple
         row_tuple = (row['CARNO_2'], row['NO_2'],
                           datetime.datetime.strptime(row['DATE_2'], '%Y-%m-%d'),
                           row['TIME_2'], row['ADDR_2'], row['GPS_2A'],
@@ -116,5 +118,53 @@ def MakeDbfFile(file_name, sql):
         new_table.append(row_tuple)
         i += 1
     new_table.close()
+
+
+def MakeCarDbfFile(file_name, sql):
+    new_table = dbf.Table(file_name,
+                          'CARNO C(8); NO C(4); CARTYPE C(12); CARCOLOR C(4); CARAGE C(4); COMPANY C(40); '
+                          'COMPANY2 C(4); DEBIT C(8); ENDDATE C(9); ACCNO C(15); GRADE C(4); COMPMAN C(10); '
+                          'CASENO C(15); DATE D; FINDMODE C(6); CHGDATE D; CHGREC C(65); NOTE2 C(50); BNKDATA L; '
+                          'MAN C(10); AGE N(3,0); ID C(10); ADDR1 C(50); ADDR2 C(50); ADDR3 C(50); ADDR4 C(50); '
+                          'TEL1 C(15); TEL2 C(15); TEL3 C(15); TEL4 C(15); OTH1 C(8); OTH2 C(8); OTH3 C(8); OTH4 C(8); '
+                          'NEWCHK L; PAUSEDATE D; NOJOIN L;', codepage='cp950')
+
+    new_table.open(dbf.READ_WRITE)
+
+    db = database()
+    conn = db.create_connection()
+    rows = Cursor2Dict(conn, sql)
+    count = 0
+    for row in rows:
+        # 資料整理
+        if row['CDATE'] == 'None':
+            row['CDATE'] = None
+        else:
+            row['CDATE'] = datetime.datetime.strptime(row['CDATE'], '%Y-%m-%d')
+
+        if row['CHGDATE'] == 'None':
+            row['CHGDATE'] = None
+        else:
+            row['CHGDATE'] = datetime.datetime.strptime(row['CHGDATE'], '%Y-%m-%d')
+
+        if row['PAUSEDATE'] == 'None':
+            row['PAUSEDATE'] = None
+        else:
+            row['PAUSEDATE'] = datetime.datetime.strptime(row['PAUSEDATE'], '%Y-%m-%d')
+
+        # 轉成Tuple
+        row_tuple = (row['CARNO'], row['CNO'],row['CARTYPE'], row['CARCOLOR'],row['CARAGE'],
+                     row['COMPANY'], row['COMPANY2'], row['DEBIT'], row['ENDDATE'], row['ACCNO'],
+                     row['GRADE'], row['COMPMAN'], row['CASENO'], row['CDATE'],row['FINDMODE'],
+                     row['CHGDATE'],row['CHGREC'], row['NOTE2'], bool(row['BNKDATA']), row['MAN'], row['AGE'],
+                     row['CID'], row['ADDR1'], row['ADDR2'], row['ADDR3'], row['ADDR4'], row['TEL1'],
+                     row['TEL2'], row['TEL3'], row['TEL4'], row['OTH1'], row['OTH2'], row['OTH3'],
+                     row['OTH4'], bool(row['NEWCHK']), row['PAUSEDATE'], bool(row['NOJOIN']))
+
+        new_table.append(row_tuple)
+        count += 1
+    new_table.close()
+    return count
+
 
 

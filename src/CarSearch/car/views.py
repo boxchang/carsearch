@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
-from CarSearch.settings.base import MEDIA_ROOT
-from bases.utils import FileUploadJob
+from CarSearch.settings.base import MEDIA_ROOT, CAR_FILE_ROOT
+from bases.utils import FileUploadJob, MakeCarDbfFile
 from car.forms import FileUploadForm
 from car.models import Car
 from gps.models import GPS
@@ -10,9 +10,11 @@ import dbfread
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 import threading
-
+import os
 from tasks.car_upload import CAR_Upload
-from users.models import CustomUser, SearchRecord
+from users.models import SearchRecord, CarDownloadRecord
+import datetime
+from django.http import HttpResponse
 
 
 @login_required
@@ -136,28 +138,27 @@ def car_data_update(request):
 @login_required
 def download(request):
     if request.method == 'POST':
-        form = FileUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            # get cleaned data
-            raw_file = form.cleaned_data.get("file")
-            fileJob = FileJob()
-            fileJob.file_type = "CAR"
-            batch_no, file_path = FileUploadJob().handle_uploaded_file(raw_file)
-            fileJob.batch_no = batch_no
-            fileJob.file = file_path
-            table = dbfread.DBF(MEDIA_ROOT + file_path)
-            fileJob.count = len(table)
-            fileJob.status = JobStatus.objects.get(id=1)  # WAIT
-            fileJob.create_by = CustomUser.objects.get(id=1)
-            fileJob.save()
+        sql = "select * from car_car "
 
-            t = threading.Thread(target=run_upload)
-            t.setDaemon(True)  # 主線程不管子線程的結果
-            t.start()
+        if not os.path.isdir(CAR_FILE_ROOT):
+            os.mkdir(CAR_FILE_ROOT)
 
-            return redirect(reverse('job_detail'))
-    else:
-        form = FileUploadForm()
+        now = datetime.datetime.now()
+        time_series = datetime.datetime.strftime(now, '%Y%m%d%H%M%S')
+        file_name = 'car_{time_series}.dbf'.format(time_series=time_series)
+        file_path = CAR_FILE_ROOT + file_name
+        count = MakeCarDbfFile(file_path, sql)
+
+        record = CarDownloadRecord()
+        record.down_count = count
+        record.user = request.user
+        record.save()
+
+        with open(file_path, "rb") as fprb:
+            response = HttpResponse(fprb.read(), content_type='application/x-dbf')
+            response['Content-Disposition'] = 'attachment; filename=' + file_name
+        os.remove(file_path)
+        return response
 
 
 @login_required
@@ -175,7 +176,7 @@ def upload(request):
             table = dbfread.DBF(MEDIA_ROOT + file_path)
             fileJob.count = len(table)
             fileJob.status = JobStatus.objects.get(id=1)  # WAIT
-            fileJob.create_by = CustomUser.objects.get(id=1)
+            fileJob.create_by = request.user
             fileJob.save()
 
             t = threading.Thread(target=run_upload)
@@ -274,5 +275,10 @@ def detail(request, pk):
 
 def run_upload():
     obj = CAR_Upload()
-    obj.delete_car_data()
-    obj.execute()
+    obj.clean_car_temp_data()
+    obj.execute_job()  # insert car_cartemp data
+    obj.clean_car_data()
+    obj.insert_car_data()  # transfer car_cartemp to car_car
+
+
+

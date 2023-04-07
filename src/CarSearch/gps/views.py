@@ -1,7 +1,7 @@
 import datetime
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from bases.utils import MakeDbfFile
+from bases.utils import MakeGPSDbfFile
 from CarSearch.settings.base import MEDIA_ROOT, GPS_FILE_ROOT
 from bases.utils import FileUploadJob
 from car.forms import FileUploadForm
@@ -46,7 +46,7 @@ def download(request):
         time_series = datetime.datetime.strftime(now, '%Y%m%d%H%M%S')
         file_name = 'gps_{time_series}.dbf'.format(time_series=time_series)
         file_path = GPS_FILE_ROOT + file_name
-        MakeDbfFile(file_path, sql)
+        MakeGPSDbfFile(file_path, sql)
         with open(file_path, "rb") as fprb:
             response = HttpResponse(fprb.read(), content_type='application/x-dbf')
             response['Content-Disposition'] = 'attachment; filename=' + file_name
@@ -70,7 +70,7 @@ def upload(request):
             fileJob.count = len(table)
             fileJob.success = 0
             fileJob.status = JobStatus.objects.get(id=1)  # WAIT
-            fileJob.create_by = CustomUser.objects.get(id=1)
+            fileJob.create_by = request.user
             fileJob.save()
 
             t = threading.Thread(target=run_upload)

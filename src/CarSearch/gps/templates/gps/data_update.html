@@ -39,3 +39,15 @@
         </fieldset>
     </div>
 {% endblock container %}
+{% block js %}
+    <script>
+        if("{{ delete_result }}"=="True"){
+            alert("刪除成功");
+        }else if("{{ delete_result }}"=="False"){
+            alert("刪除失敗");
+        }else if("{{ delete_result }}"=="None"){
+            alert("無刪除任何資料");
+        }
+
+    </script>
+{% endblock js %}

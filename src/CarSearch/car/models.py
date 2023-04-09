@@ -107,3 +107,9 @@ class CarTemp(models.Model):
 
     def __str__(self):
         return self.CARNO
+
+
+class CAR_PHOTO(models.Model):
+    batch_no = models.CharField(max_length=50)
+    FILE = models.CharField(max_length=100)
+    CARNO = models.CharField(max_length=50)

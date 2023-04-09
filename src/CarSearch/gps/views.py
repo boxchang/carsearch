@@ -1,11 +1,13 @@
 import datetime
+
+from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from bases.utils import MakeGPSDbfFile
+from bases.utils import MakeGPSDbfFile, unzip_file
 from CarSearch.settings.base import MEDIA_ROOT, GPS_FILE_ROOT
 from bases.utils import FileUploadJob
 from car.forms import FileUploadForm
-from gps.forms import FileDownloadForm
+from gps.forms import FileDownloadForm, PhotoUploadForm
 from gps.models import GPS
 from jobs.models import FileJob, JobStatus
 import dbfread
@@ -100,3 +102,20 @@ def upload(request):
 def run_upload():
     obj = GPS_Upload()
     obj.execute()
+
+
+@login_required
+def gps_photo_upload(request):
+    if request.method == 'POST':
+        form = PhotoUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            # get cleaned data
+            raw_file = form.cleaned_data.get("file")
+            fss = FileSystemStorage()
+            file = fss.save(raw_file.name, raw_file)
+            upload_resut, count = unzip_file("GPS", file, "gps_photo", request.user)
+
+        upload_form = FileUploadForm()
+        photo_upload_form = PhotoUploadForm()
+        download_form = FileDownloadForm()
+        return render(request, 'gps/data_update.html', locals())

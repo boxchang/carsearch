@@ -1,10 +1,18 @@
+import zipfile
+
 import dbfread
 import MySQLdb
 import os
 import uuid
 import datetime
+
+from CarSearch.settings.base import MEDIA_ROOT
 from bases.database import database
 import dbf
+
+from car.models import CAR_PHOTO
+from gps.models import GPS_PHOTO
+from users.models import UploadRecord
 
 
 class JOB_STATUS(object):
@@ -165,6 +173,62 @@ def MakeCarDbfFile(file_name, sql):
         count += 1
     new_table.close()
     return count
+
+def unzip_file(type, file, unzip_path, user):
+    try:
+        # 查看 ZIP 壓縮檔內容資訊
+        file_path = MEDIA_ROOT + file
+        count = 0
+        batch_no = uuid.uuid4().hex[:10]
+
+
+
+        with zipfile.ZipFile(file_path, 'r') as zf:
+            # 透過 InfoInfo 物件查看 ZIP 檔案內容
+            # 解壓縮前先紀錄Record
+            for info in zf.infolist():
+                if info.filename[-4:] == ".jpg" or info.filename[-4:] == ".png":
+                    count += 1
+                    print(info)
+                    if type == "CAR":
+                        if str(info.filename).find("_") > 0:
+                            raise Exception("檔案格式不符")
+                        photo = CAR_PHOTO()
+                        photo.CARNO = info.filename[:str(info.filename).find(".")]
+                        photo.FILE = info.filename
+                        photo.save()
+                    elif type == "GPS":
+                        photo = GPS_PHOTO()
+                        gps_info = info.filename.split("_")
+                        photo.FILE = info.filename[str(info.filename).find("/")+1:]
+                        photo.CARNO = gps_info[0][str(gps_info[0]).find("/")+1:]
+                        photo.DATE = gps_info[1]
+                        photo.TIME = gps_info[2]
+                        photo.GPS_2A = gps_info[3]
+                        photo.GPS_2B = gps_info[4]
+                        photo.save()
+
+            record = UploadRecord()
+            record.type = type
+            record.batch_no = batch_no
+            record.user = user
+            record.count = count
+            record.save()
+
+            absolute_file_path = MEDIA_ROOT + unzip_path
+            directory = os.path.dirname(absolute_file_path)
+            if not os.path.exists(directory):
+                os.makedirs(directory)
+
+            # 解壓縮所有檔案至 car_photo 目錄
+            zf.extractall(path=absolute_file_path)
+        os.remove(file_path)
+        upload_resut = "success"
+    except Exception as e:
+        print(e)
+        upload_resut = "fail"
+    return upload_resut, count
+
 
 
 

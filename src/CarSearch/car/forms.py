@@ -13,9 +13,20 @@ class FileUploadForm(forms.Form):
         file = self.cleaned_data['file']
         ext = file.name.split('.')[-1].lower()
         if ext not in ["dbf"]:
-            raise forms.ValidationError("Only dbf files are allowed.")
+            raise forms.ValidationError("只能上傳DBF檔.")
         # return cleaned data is very important.
         return file
 
+
+class PhotoUploadForm(forms.Form):
+    file = forms.FileField(label="", widget=forms.ClearableFileInput(attrs={'class': 'form-control'}))
+
+    def clean_file(self):
+        file = self.cleaned_data['file']
+        ext = file.name.split('.')[-1].lower()
+        if ext not in ["zip"]:
+            raise forms.ValidationError("只能上傳ZIP檔.")
+        # return cleaned data is very important.
+        return file
 
 

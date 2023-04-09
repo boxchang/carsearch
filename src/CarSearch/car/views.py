@@ -1,8 +1,9 @@
+from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
-from CarSearch.settings.base import MEDIA_ROOT, CAR_FILE_ROOT
-from bases.utils import FileUploadJob, MakeCarDbfFile
-from car.forms import FileUploadForm
+from CarSearch.settings.base import MEDIA_ROOT, CAR_FILE_ROOT, MEDIA_URL
+from bases.utils import FileUploadJob, MakeCarDbfFile, unzip_file
+from car.forms import FileUploadForm, PhotoUploadForm
 from car.models import Car
 from gps.models import GPS
 from jobs.models import FileJob, JobStatus
@@ -16,6 +17,7 @@ from users.models import SearchRecord, CarDownloadRecord
 import datetime
 from django.http import HttpResponse
 from django.db.models import Q
+import zipfile
 
 
 @login_required
@@ -132,7 +134,7 @@ class SearchCondition(object):
 @login_required
 def car_data_update(request):
     upload_form = FileUploadForm()
-
+    photo_upload_form = PhotoUploadForm()
     return render(request, 'car/data_update.html', locals())
 
 
@@ -167,6 +169,22 @@ def is_uploading():
         return True
     else:
         return False
+
+@login_required
+def car_photo_upload(request):
+    if request.method == 'POST':
+        form = PhotoUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            # get cleaned data
+            raw_file = form.cleaned_data.get("file")
+            fss = FileSystemStorage()
+            file = fss.save(raw_file.name, raw_file)
+            upload_resut, count = unzip_file("CAR", file, "car_photo", request.user)
+
+        upload_form = FileUploadForm()
+        photo_upload_form = PhotoUploadForm()
+        return render(request, 'car/data_update.html', locals())
+
 
 @login_required
 def upload(request):
@@ -278,6 +296,14 @@ def detail(request, pk):
     for gps in gpss:
         gps.GPS_2A = (float(gps.GPS_2A[3:])/60)+float(gps.GPS_2A[0:3])  # 經度 22
         gps.GPS_2B = (float(gps.GPS_2B[2:])/60)+float(gps.GPS_2B[0:2])  # 緯度 120
+
+    # 車籍照片是否存在
+    file_path = os.path.join(os.path.join(MEDIA_ROOT, 'car_photo\\'), car.CARNO+".png")
+    if os.path.isfile(file_path):
+        image_file = MEDIA_URL+"car_photo/" + car.CARNO+".png"
+    else:
+        image_file = MEDIA_URL+"car_photo/no-image.png"
+
 
     return render(request, 'car/detail.html', locals())
 

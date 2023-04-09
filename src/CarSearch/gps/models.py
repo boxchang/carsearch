@@ -23,3 +23,15 @@ class GPS(models.Model):
     def __str__(self):
         return self.CARNO_2
 
+
+class GPS_PHOTO(models.Model):
+    batch_no = models.CharField(max_length=50)
+    FILE = models.CharField(max_length=100)
+    CARNO = models.CharField(max_length=50)
+    DATE = models.CharField(max_length=50)
+    TIME = models.CharField(max_length=50)
+    GPS_2A = models.CharField(max_length=50)
+    GPS_2B = models.CharField(max_length=50)
+
+
+

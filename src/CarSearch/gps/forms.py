@@ -56,3 +56,15 @@ class FileDownloadForm(forms.Form):
                 "showTodayButton": False,
             }
         )
+
+
+class PhotoUploadForm(forms.Form):
+    file = forms.FileField(label="", widget=forms.ClearableFileInput(attrs={'class': 'form-control'}))
+
+    def clean_file(self):
+        file = self.cleaned_data['file']
+        ext = file.name.split('.')[-1].lower()
+        if ext not in ["zip"]:
+            raise forms.ValidationError("只能上傳ZIP檔.")
+        # return cleaned data is very important.
+        return file

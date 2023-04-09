@@ -29,8 +29,11 @@ class GPS_Upload(object):
         count = 0
         for record in table:
             if self.chkRecord(record):
-                self.insertRecord(batch_no, record)
-                count += 1
+                try:
+                    self.insertRecord(batch_no, record)
+                    count += 1
+                except:
+                    pass
         print("共{count}筆".format(count=count))
         self.log("End Insert")
         return count

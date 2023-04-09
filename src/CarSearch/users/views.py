@@ -17,7 +17,7 @@ from users.forms import CurrentCustomUserForm, CustomUser, LoginRecord
 from django.http import JsonResponse
 from django.db.models import Q
 
-from users.models import PostponeRecord, SearchRecord, CarDownloadRecord
+from users.models import PostponeRecord, SearchRecord, CarDownloadRecord, UploadRecord
 
 
 def add_permission(user, codename):
@@ -179,18 +179,16 @@ def photo_upload_record_api(request):
         pk = request.POST.get('pk')
 
         # GPS上傳紀錄
-        records = FileJob.objects.filter(create_by=pk, file_type='GPS').order_by('-create_at')
+        records = UploadRecord.objects.filter(user=pk, type='GPS').order_by('-create_at')
 
-        index = records.count()
         for record in records:
             create_at = datetime.datetime.strftime(record.create_at, "%Y-%m-%d %H:%M:%S")
             html += """
             <tr>
                 <td class="text-center">{create_at}</td>
-                <td class="text-center">{success}</td>
+                <td class="text-center">{count}</td>
             </tr>
-            """.format(success=record.success, create_at=create_at)
-            index -= 1
+            """.format(count=record.count, create_at=create_at)
 
     return JsonResponse(html, safe=False)
 

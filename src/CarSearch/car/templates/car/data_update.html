@@ -4,23 +4,38 @@
     車單資料
 {% endblock %}
 {% block container %}
+{% if form.errors %}
+    <div class="alert alert-danger">
+        {{ form.errors }}
+    </div>
+{% endif %}
     <div style="height: 600px">
-        <fieldset class="scheduler-border pt-5 pb-5">
-            <legend class="scheduler-border">點擊上傳車單資料(*.dbf)</legend>
+        <fieldset class="scheduler-border pt-2 pb-4">
+            <legend class="scheduler-border">車單資料</legend>
             <form action="{% url 'car_upload' %}" method="post" class="form-group font-weight-bold align-middle" id="car_form" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ upload_form.as_p }}
                 <div style="text-align: center">
-                    <button type="submit" class="btn btn-primary" id="send" style="border-color: #28a745;background-color: #28a745; width: 100%;">點擊上傳</button>
+                    <button type="submit" class="btn btn-primary" id="send" style="border-color: #28a745;background-color: #28a745; width: 100%;">點擊上傳車單資料(*.dbf)</button>
                 </div>
             </form>
         </fieldset>
         <fieldset class="scheduler-border pb-5">
-            <legend class="scheduler-border">點擊下載車單資料(*.dbf)</legend>
+            <legend class="scheduler-border">車籍照片</legend>
+            <form action="{% url 'car_photo_upload' %}" method="post" class="form-group font-weight-bold align-middle" id="car_form" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ photo_upload_form.as_p }}
+                <div style="text-align: center">
+                    <button type="submit" class="btn btn-primary" id="send" style="border-color: #28a745;background-color: #28a745; width: 100%;">點擊上傳車籍照片(*.zip)</button>
+                </div>
+            </form>
+        </fieldset>
+        <fieldset class="scheduler-border pb-5">
+            <legend class="scheduler-border">車單資料</legend>
             <form action="{% url 'car_download' %}" method="post" class="form-group font-weight-bold align-middle" id="car_form" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div style="text-align: center">
-                    <button type="submit" class="btn btn-primary" id="send" style="border-color: #007bff;background-color: #007bff; width: 100%;">點擊下載</button>
+                    <button type="submit" class="btn btn-primary" id="send" style="border-color: #007bff;background-color: #007bff; width: 100%;">點擊下載車單資料(*.dbf)</button>
                 </div>
             </form>
         </fieldset>
@@ -32,6 +47,12 @@
     <script>
         if("{{ is_uploading_flag }}"=="Y") {
             alert("目前有車單資料上傳中，無法再上傳檔案，如有問題請連絡系統管理員");
+        }
+
+        if("{{ upload_resut }}"=="success") {
+            alert("上傳車籍照片成功，共新增{{ count }}筆");
+        }else if("{{ upload_resut }}"=="fail") {
+            alert("上傳失敗，可能檔案名稱格式不正確");
         }
     </script>
 {% endblock js %}

@@ -88,7 +88,7 @@ def upload(request):
             fileJob.create_by = request.user
             fileJob.save()
 
-            t = threading.Thread(target=run_upload_car_data)
+            t = threading.Thread(target=run_upload_gps_data)
             t.setDaemon(True)  # 主線程不管子線程的結果
             t.start()
 
@@ -99,9 +99,9 @@ def upload(request):
     return render(request, 'gps/data_update.html', locals())
 
 
-def run_upload_car_data():
+def run_upload_gps_data():
     obj = GPS_Upload()
-    obj.upload_car_data()
+    obj.upload_gps_data()
 
 
 @login_required

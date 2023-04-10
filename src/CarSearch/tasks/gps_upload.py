@@ -20,7 +20,7 @@ class GPS_Upload(object):
         print("{CurrentTime} {msg}".format(CurrentTime=current_time, msg=msg))
 
     '''
-    新增DBF資料
+    新增DBF資料，不會有重覆資料，但新增速度慢
     '''
     def insertDbfFile(self, batch_no, filename):
         table = dbfread.DBF(filename)
@@ -36,6 +36,39 @@ class GPS_Upload(object):
                     pass
         print("共{count}筆".format(count=count))
         self.log("End Insert")
+        return count
+
+
+    '''
+    新增DBF資料，有重覆資料，但新增速度快
+    '''
+    def insertDbfFile2(self, batch_no, filename):
+        db = database()
+        table = dbfread.DBF(filename, load=True, char_decode_errors='ignore')
+
+        count = 0
+
+        fields = table.field_names
+        db_fields = []
+        for field in fields:
+            db_fields.append(field)
+
+        fields_str = ','.join(db_fields)
+        fields_sql = "(batch_no, {colums})".format(colums=fields_str)
+
+        init_sql = "INSERT INTO gps_gps {colums} VALUES ".format(colums=fields_sql)
+        values_sql = init_sql
+        for record in table:
+            if count % 3000 == 0 and count != 0:
+                db.execute_sql(values_sql[:-1])
+                values_sql = init_sql  # 初始化
+
+            values_str = ','.join("'{value}'".format(value=str(record[field]).replace("'", "''")) for field in fields)
+            values_sql += "('{batch_no}',{value}),".format(batch_no=batch_no, value=values_str)
+            count += 1
+
+        db.execute_sql(values_sql[:-1])
+
         return count
 
     def chkRecord(self, record):
@@ -72,7 +105,7 @@ class GPS_Upload(object):
         db.execute_sql(sql)
 
 
-    def upload_car_data(self):
+    def upload_gps_data(self):
         upload = FileUploadJob()
 
         sql = """select * from jobs_filejob where status_id='1' and file_type='GPS'"""
@@ -82,7 +115,7 @@ class GPS_Upload(object):
             batch_no = row['batch_no']
             file_path = MEDIA_ROOT + file_name
             upload.filejob_start_update(batch_no, '2', 0)  # ON-Going
-            count = self.insertDbfFile(batch_no, file_path)
+            count = self.insertDbfFile2(batch_no, file_path)
             upload.filejob_end_update(batch_no, '3', count)  # DONE
 
     def upload_gps_pic(self):

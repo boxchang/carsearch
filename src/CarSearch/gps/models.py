@@ -17,8 +17,8 @@ class GPS(models.Model):
     BINGO_2 = models.CharField(max_length=50)
     UPDATE_2 = models.CharField(max_length=50)
 
-    class Meta:
-        unique_together = ('CARNO_2', 'DATE_2', 'TIME_2')
+    # class Meta:
+    #     unique_together = ('CARNO_2', 'DATE_2', 'TIME_2')
 
     def __str__(self):
         return self.CARNO_2

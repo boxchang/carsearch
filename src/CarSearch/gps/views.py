@@ -1,9 +1,9 @@
 import datetime
-
+import uuid
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from bases.utils import MakeGPSDbfFile, unzip_file
+from bases.utils import MakeGPSDbfFile, check_zip
 from CarSearch.settings.base import MEDIA_ROOT, GPS_FILE_ROOT
 from bases.utils import FileUploadJob
 from car.forms import FileUploadForm
@@ -88,7 +88,7 @@ def upload(request):
             fileJob.create_by = request.user
             fileJob.save()
 
-            t = threading.Thread(target=run_upload)
+            t = threading.Thread(target=run_upload_car_data)
             t.setDaemon(True)  # 主線程不管子線程的結果
             t.start()
 
@@ -99,9 +99,9 @@ def upload(request):
     return render(request, 'gps/data_update.html', locals())
 
 
-def run_upload():
+def run_upload_car_data():
     obj = GPS_Upload()
-    obj.execute()
+    obj.upload_car_data()
 
 
 @login_required
@@ -111,11 +111,35 @@ def gps_photo_upload(request):
         if form.is_valid():
             # get cleaned data
             raw_file = form.cleaned_data.get("file")
+            # Save File
             fss = FileSystemStorage()
             file = fss.save(raw_file.name, raw_file)
-            upload_resut, count = unzip_file("GPS", file, "gps_photo", request.user)
+
+            # Save Job
+            batch_no = uuid.uuid4().hex[:10]
+            file_type = "GPIC"
+            count = check_zip(file_type, file)
+            fileJob = FileJob()
+            fileJob.file_type = file_type
+            fileJob.batch_no = batch_no
+            fileJob.file = raw_file.name
+            fileJob.count = count
+            fileJob.success = 0
+            fileJob.status = JobStatus.objects.get(id=1)  # WAIT
+            fileJob.create_by = request.user
+            fileJob.save()
+
+            t = threading.Thread(target=run_upload_gps_pic)
+            t.setDaemon(True)  # 主線程不管子線程的結果
+            t.start()
+            return redirect(reverse('job_detail'))
 
         upload_form = FileUploadForm()
         photo_upload_form = PhotoUploadForm()
         download_form = FileDownloadForm()
         return render(request, 'gps/data_update.html', locals())
+
+
+def run_upload_gps_pic():
+    obj = GPS_Upload()
+    obj.upload_gps_pic()

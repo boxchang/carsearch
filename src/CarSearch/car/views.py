@@ -1,8 +1,10 @@
+import uuid
+
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from CarSearch.settings.base import MEDIA_ROOT, CAR_FILE_ROOT, MEDIA_URL
-from bases.utils import FileUploadJob, MakeCarDbfFile, unzip_file
+from bases.utils import FileUploadJob, MakeCarDbfFile, unzip_file, check_zip
 from car.forms import FileUploadForm, PhotoUploadForm
 from car.models import Car
 from gps.models import GPS
@@ -177,14 +179,36 @@ def car_photo_upload(request):
         if form.is_valid():
             # get cleaned data
             raw_file = form.cleaned_data.get("file")
+            # Save File
             fss = FileSystemStorage()
             file = fss.save(raw_file.name, raw_file)
-            upload_resut, count = unzip_file("CAR", file, "car_photo", request.user)
+
+            # Save Job
+            batch_no = uuid.uuid4().hex[:10]
+            file_type = "CPIC"
+            count = check_zip(file_type, file)
+            fileJob = FileJob()
+            fileJob.file_type = file_type
+            fileJob.batch_no = batch_no
+            fileJob.file = raw_file.name
+            fileJob.count = count
+            fileJob.success = 0
+            fileJob.status = JobStatus.objects.get(id=1)  # WAIT
+            fileJob.create_by = request.user
+            fileJob.save()
+
+            t = threading.Thread(target=run_upload_car_pic)
+            t.setDaemon(True)  # 主線程不管子線程的結果
+            t.start()
+            return redirect(reverse('job_detail'))
 
         upload_form = FileUploadForm()
         photo_upload_form = PhotoUploadForm()
         return render(request, 'car/data_update.html', locals())
 
+def run_upload_car_pic():
+    obj = CAR_Upload()
+    obj.upload_car_pic()
 
 @login_required
 def upload(request):

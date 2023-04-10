@@ -2,7 +2,7 @@ import dbfread
 from datetime import datetime
 from CarSearch.settings.base import MEDIA_ROOT
 from bases.database import database
-from bases.utils import Cursor2Dict, FileUploadJob
+from bases.utils import Cursor2Dict, FileUploadJob, unzip_file
 
 
 class GPS_Upload(object):
@@ -72,7 +72,7 @@ class GPS_Upload(object):
         db.execute_sql(sql)
 
 
-    def execute(self):
+    def upload_car_data(self):
         upload = FileUploadJob()
 
         sql = """select * from jobs_filejob where status_id='1' and file_type='GPS'"""
@@ -83,6 +83,19 @@ class GPS_Upload(object):
             file_path = MEDIA_ROOT + file_name
             upload.filejob_start_update(batch_no, '2', 0)  # ON-Going
             count = self.insertDbfFile(batch_no, file_path)
+            upload.filejob_end_update(batch_no, '3', count)  # DONE
+
+    def upload_gps_pic(self):
+        upload = FileUploadJob()
+
+        sql = """select * from jobs_filejob where status_id='1' and file_type='GPIC'"""
+        rows = Cursor2Dict(self.conn, sql)
+        for row in rows:
+            file_name = row['file']
+            batch_no = row['batch_no']
+            file_type = row['file_type']
+            upload.filejob_start_update(batch_no, '2', 0)  # ON-Going
+            upload_resut, count = unzip_file(file_type, file_name, "gps_photo")
             upload.filejob_end_update(batch_no, '3', count)  # DONE
 
 

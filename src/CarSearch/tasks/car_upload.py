@@ -2,7 +2,7 @@ import dbfread
 from datetime import datetime
 from CarSearch.settings.base import MEDIA_ROOT
 from bases.database import database
-from bases.utils import Cursor2Dict, FileUploadJob
+from bases.utils import Cursor2Dict, FileUploadJob, unzip_file
 from django.db import connection, transaction
 
 
@@ -87,6 +87,18 @@ class CAR_Upload(object):
         sql = """INSERT INTO car_car SELECT * FROM car_cartemp"""
         cursor.execute(sql)
 
+    def upload_car_pic(self):
+        upload = FileUploadJob()
+
+        sql = """select * from jobs_filejob where status_id='1' and file_type='CPIC'"""
+        rows = Cursor2Dict(self.conn, sql)
+        for row in rows:
+            file_name = row['file']
+            batch_no = row['batch_no']
+            file_type = row['file_type']
+            upload.filejob_start_update(batch_no, '2', 0)  # ON-Going
+            upload_resut, count = unzip_file(file_type, file_name, "car_photo")
+            upload.filejob_end_update(batch_no, '3', count)  # DONE
 
 
 # obj = CAR_Upload()

@@ -9,15 +9,13 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.urls import reverse
-
 from bases.utils import get_ip_address
 from bases.views import index
 from jobs.models import FileJob
 from users.forms import CurrentCustomUserForm, CustomUser, LoginRecord
 from django.http import JsonResponse
 from django.db.models import Q
-
-from users.models import PostponeRecord, SearchRecord, CarDownloadRecord, UploadRecord
+from users.models import PostponeRecord, SearchRecord, CarDownloadRecord
 
 
 def add_permission(user, codename):
@@ -179,7 +177,7 @@ def photo_upload_record_api(request):
         pk = request.POST.get('pk')
 
         # GPS上傳紀錄
-        records = UploadRecord.objects.filter(user=pk, type='GPS').order_by('-create_at')
+        records = FileJob.objects.filter(create_by=pk, file_type='GPIC').order_by('-create_at')
 
         for record in records:
             create_at = datetime.datetime.strftime(record.create_at, "%Y-%m-%d %H:%M:%S")

@@ -54,15 +54,6 @@ class CarDownloadRecord(models.Model):
     create_at = models.DateTimeField(auto_now_add=True, editable=True)
 
 
-class UploadRecord(models.Model):
-    type = models.CharField(max_length=10)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING,
-                             related_name='user_upload')
-    batch_no = models.CharField(max_length=50)
-    count = models.IntegerField()
-    create_at = models.DateTimeField(auto_now_add=True, editable=True)
-
-
 class CustomUserManager(BaseUserManager):
 
     def _create_user(self, username, password,

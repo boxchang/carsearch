@@ -1,18 +1,14 @@
 import zipfile
-
 import dbfread
 import MySQLdb
 import os
 import uuid
 import datetime
-
 from CarSearch.settings.base import MEDIA_ROOT
 from bases.database import database
 import dbf
-
 from car.models import CAR_PHOTO
 from gps.models import GPS_PHOTO
-from users.models import UploadRecord
 
 
 class JOB_STATUS(object):
@@ -174,30 +170,40 @@ def MakeCarDbfFile(file_name, sql):
     new_table.close()
     return count
 
-def unzip_file(type, file, unzip_path, user):
+
+def check_zip(file_type, file):
+    count = 0
+    result = ""
+    file_path = MEDIA_ROOT + file
+    with zipfile.ZipFile(file_path, 'r') as zf:
+        # 透過 InfoInfo 物件查看 ZIP 檔案內容
+        for info in zf.infolist():
+            if info.filename[-4:] == ".jpg" or info.filename[-4:] == ".png":
+                count += 1
+                if file_type == "CPIC":
+                    if str(info.filename).find("_") > 0:
+                        result = "檔案格式不符"
+    return result
+
+
+def unzip_file(file_type, file, unzip_path):
     try:
         # 查看 ZIP 壓縮檔內容資訊
         file_path = MEDIA_ROOT + file
         count = 0
-        batch_no = uuid.uuid4().hex[:10]
-
-
 
         with zipfile.ZipFile(file_path, 'r') as zf:
             # 透過 InfoInfo 物件查看 ZIP 檔案內容
-            # 解壓縮前先紀錄Record
             for info in zf.infolist():
                 if info.filename[-4:] == ".jpg" or info.filename[-4:] == ".png":
                     count += 1
                     print(info)
-                    if type == "CAR":
-                        if str(info.filename).find("_") > 0:
-                            raise Exception("檔案格式不符")
+                    if file_type == "CPIC":
                         photo = CAR_PHOTO()
                         photo.CARNO = info.filename[:str(info.filename).find(".")]
                         photo.FILE = info.filename
                         photo.save()
-                    elif type == "GPS":
+                    elif file_type == "GPIC":
                         photo = GPS_PHOTO()
                         gps_info = info.filename.split("_")
                         photo.FILE = info.filename[str(info.filename).find("/")+1:]
@@ -207,13 +213,6 @@ def unzip_file(type, file, unzip_path, user):
                         photo.GPS_2A = gps_info[3]
                         photo.GPS_2B = gps_info[4]
                         photo.save()
-
-            record = UploadRecord()
-            record.type = type
-            record.batch_no = batch_no
-            record.user = user
-            record.count = count
-            record.save()
 
             absolute_file_path = MEDIA_ROOT + unzip_path
             directory = os.path.dirname(absolute_file_path)

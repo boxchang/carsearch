@@ -37,7 +37,7 @@ class Car(models.Model):
     CDATE = models.CharField(max_length=50)  # 建檔日期
     FINDMODE = models.CharField(max_length=50)  # 狀態
     CHGDATE = models.CharField(max_length=50)  # 異動日期
-    CHGREC = models.CharField(max_length=50)  # 未知
+    CHGREC = models.CharField(max_length=255)  # 未知
     NOTE2 = models.CharField(max_length=50)  # 備註2
     BNKDATA = models.CharField(max_length=50)  # 未知
     MAN = models.CharField(max_length=50)  # 關聯
@@ -81,7 +81,7 @@ class Car2(models.Model):
     CDATE = models.CharField(max_length=50)  # 建檔日期
     FINDMODE = models.CharField(max_length=50)  # 狀態
     CHGDATE = models.CharField(max_length=50)  # 異動日期
-    CHGREC = models.CharField(max_length=50)  # 未知
+    CHGREC = models.CharField(max_length=255)  # 未知
     NOTE2 = models.CharField(max_length=50)  # 備註2
     BNKDATA = models.CharField(max_length=50)  # 未知
     MAN = models.CharField(max_length=50)  # 關聯
@@ -126,7 +126,7 @@ class CarTemp(models.Model):
     CDATE = models.CharField(max_length=50)  # 建檔日期
     FINDMODE = models.CharField(max_length=50)  # 狀態
     CHGDATE = models.CharField(max_length=50)  # 異動日期
-    CHGREC = models.CharField(max_length=50)  # 未知
+    CHGREC = models.CharField(max_length=255)  # 未知
     NOTE2 = models.CharField(max_length=50)  # 備註2
     BNKDATA = models.CharField(max_length=50)  # 未知
     MAN = models.CharField(max_length=50)  # 關聯

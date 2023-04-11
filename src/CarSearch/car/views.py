@@ -18,8 +18,6 @@ from tasks.car_upload import CAR_Upload
 from users.models import SearchRecord, CarDownloadRecord
 import datetime
 from django.http import HttpResponse
-from django.db.models import Q
-import zipfile
 
 
 @login_required
@@ -334,6 +332,8 @@ def detail(request, pk):
 
 def run_upload():
     obj = CAR_Upload()
+    obj.clean_car2_data()
+    obj.insert_car2_data()
     obj.clean_car_temp_data()
     obj.execute_job()  # insert car_cartemp data
     obj.clean_car_data()

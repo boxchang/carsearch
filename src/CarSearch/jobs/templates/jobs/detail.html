@@ -22,16 +22,17 @@ function refresh()
     <thead class="table-dark">
         <tr>
             <th style="text-align: center;width:2%">#</th>
-            <th style="text-align: center;width:5%;text-align: center;">類型</th>
-            <th style="text-align: center;width:8%">批次</th>
+            <th style="text-align: center;width:4%;text-align: center;">類型</th>
+            <th style="text-align: center;width:7%">批次</th>
             <th style="text-align: center;width:5%">總筆數</th>
             <th style="text-align: center;width:7%">新增筆數</th>
             <th style="text-align: center;width:12%">檔案上傳時間</th>
             <th style="text-align: center;width:5%">上傳者</th>
             <th style="text-align: center;width:12%">排程開始時間</th>
             <th style="text-align: center;width:12%">排程結束時間</th>
-            <th style="text-align: center;width:7%">執行時間(s)</th>
+            <th style="text-align: center;width:8%">執行時間(s)</th>
             <th style="text-align: center;width:10%">狀態</th>
+            <th style="text-align: center;width:4%">刪除</th>
         </tr>
     </thead>
     <tbody>
@@ -69,6 +70,9 @@ function refresh()
             </td>
             <td style="text-align: center">
                 {{ job.status }}
+            </td>
+            <td style="text-align: center">
+                <a class="btn btn-danger btn-sm" href="{% url 'job_delete' job.batch_no %}" role="button" onclick="return confirm('Are you sure?')">刪除</a>
             </td>
         </tr>
     {% endfor %}

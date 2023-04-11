@@ -23,6 +23,7 @@ from bases.views import index, history
 from django.conf import settings
 
 urlpatterns = [
+    url(r'^$', index, name='index'),
     path('admin/', admin.site.urls),
     url(r'^car/', include('car.urls')),
     url(r'^gps/', include('gps.urls')),
@@ -33,6 +34,5 @@ urlpatterns = [
 
 
 urlpatterns += i18n_patterns(
-    url(r'^$', index, name='index'),
     url(r'^users/', include('users.urls')),
 )

@@ -1,3 +1,5 @@
+import os
+
 import dbfread
 from datetime import datetime
 from CarSearch.settings.base import MEDIA_ROOT
@@ -59,18 +61,34 @@ class CAR_Upload(object):
 
 
     def execute_job(self):
-        upload = FileUploadJob()
-        db = database()
-        conn = db.create_connection()
-        sql = """select * from jobs_filejob where status_id='1' and file_type='CAR'"""
-        rows = Cursor2Dict(conn, sql)
-        for row in rows:
-            file_name = row['file']
-            batch_no = row['batch_no']
-            file_path = MEDIA_ROOT + file_name
-            upload.filejob_start_update(batch_no, '2', 0)  # ON-Going
-            count = self.insertDbfFile(batch_no, file_path)
-            upload.filejob_end_update(batch_no, '3', count)  # DONE
+        try:
+            upload = FileUploadJob()
+            db = database()
+            conn = db.create_connection()
+            sql = """select * from jobs_filejob where status_id='1' and file_type='CAR'"""
+            rows = Cursor2Dict(conn, sql)
+            for row in rows:
+                file_name = row['file']
+                batch_no = row['batch_no']
+                file_path = MEDIA_ROOT + file_name
+                upload.filejob_start_update(batch_no, '2', 0)  # ON-Going
+                count = self.insertDbfFile(batch_no, file_path)
+                upload.filejob_end_update(batch_no, '3', count)  # DONE
+        except Exception as e:
+            print(e)
+            upload.filejob_update_status(batch_no, '4')  # ERROR
+        finally:
+            os.remove(file_path)
+
+    def clean_car2_data(self):
+        cursor = connection.cursor()
+        sql = "delete from car_car2"
+        cursor.execute(sql)
+
+    def insert_car2_data(self):
+        cursor = connection.cursor()
+        sql = """INSERT INTO car_car2 SELECT * FROM car_car"""
+        cursor.execute(sql)
 
     def clean_car_temp_data(self):
         cursor = connection.cursor()

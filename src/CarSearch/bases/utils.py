@@ -62,6 +62,12 @@ class FileUploadJob(object):
         )
         db.execute_sql(sql)
 
+    def filejob_update_status(self, batch_no, status_id):
+        db = database()
+        sql = """update jobs_filejob set status_id = '{status_id}' where batch_no = '{batch_no}'""".format(
+            status_id=status_id, batch_no=batch_no
+        )
+        db.execute_sql(sql)
 
 '''
 讀取DBF文件

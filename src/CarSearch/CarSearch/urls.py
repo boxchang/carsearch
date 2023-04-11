@@ -29,10 +29,7 @@ urlpatterns = [
     url(r'^gps/', include('gps.urls')),
     url(r'^jobs/', include('jobs.urls')),
     url(r'^history/', history, name='history'),
+    url(r'^users/', include('users.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
   + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-
-urlpatterns += i18n_patterns(
-    url(r'^users/', include('users.urls')),
-)

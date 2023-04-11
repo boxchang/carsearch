@@ -21,8 +21,6 @@ importlib-metadata==6.0.0
 importlib-resources==5.12.0
 Mako==1.2.4
 MarkupSafe==2.1.2
-mysql-connector-python @ file:///D:/05.Git/carsearch/config/app/mysql_connector_python-8.0.19-cp37-cp37m-win_amd64.whl
-mysqlclient @ file:///D:/05.Git/carsearch/config/app/mysqlclient-1.4.6-cp37-cp37m-win_amd64.whl
 now==0.0.6
 numpy==1.21.6
 openpyxl==3.0.10

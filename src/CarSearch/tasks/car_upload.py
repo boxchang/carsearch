@@ -47,7 +47,7 @@ class CAR_Upload(object):
         values_sql = init_sql
         for record in table:
             CARNO2 = str(record['CARNO']).replace('-', '')
-            if count % 3000 == 0 and count != 0:
+            if count % 2000 == 0 and count != 0:
                 db.execute_sql(values_sql[:-1])
                 values_sql = init_sql  # 初始化
 

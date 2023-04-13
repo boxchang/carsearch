@@ -3,26 +3,25 @@
     更新資訊
 {% endblock %}
 {% block container %}
-    更新資訊 base/info.html
     <div class="row">
         <div class="col"></div>
         <div class="col-8">
             <table class="table table-striped">
                 <tr>
                   <th>資料更新日期</th>
-                  <td>2023/03/07 00:00</td>
+                  <td>{{ update_time }}</td>
                 </tr>
                 <tr>
                   <th>協尋數量</th>
-                  <td>26,354</td>
+                  <td>{{ find_count }}</td>
                 </tr>
                 <tr>
-                  <th>03/07新增數量</th>
-                  <td>4</td>
+                  <th>新增數量</th>
+                  <td>{{ row_count }}</td>
                 </tr>
                 <tr>
                   <th>當前資料總筆數</th>
-                  <td>999,999</td>
+                  <td>{{ all_count }}</td>
                 </tr>
             </table>
         </div>

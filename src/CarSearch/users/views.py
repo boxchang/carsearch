@@ -126,8 +126,8 @@ def search_record_api(request):
     if request.method == 'POST':
         pk = request.POST.get('pk')
 
-        # 延長紀錄
-        records = SearchRecord.objects.filter(user=pk)
+        # 搜尋紀錄
+        records = SearchRecord.objects.filter(user=pk).order_by('-create_at')
 
         index = records.count()
         for record in records:

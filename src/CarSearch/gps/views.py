@@ -51,8 +51,14 @@ def download(request):
         sales = request.POST.get('sales')
         data_date_start = request.POST.get('data_date_start')
         data_date_end = request.POST.get('data_date_end')
-        sql = "select * from gps_gps where SALES_2 = '{SALES_2}' AND DATE_2 BETWEEN '{data_date_start}' AND '{data_date_end}'"\
-            .format(SALES_2=sales, data_date_start=data_date_start, data_date_end=data_date_end)
+
+        if sales:
+            sql = "select * from gps_gps where SALES_2 = '{SALES_2}' AND DATE_2 BETWEEN '{data_date_start}' AND '{data_date_end}'"\
+                .format(SALES_2=sales, data_date_start=data_date_start, data_date_end=data_date_end)
+        else:
+            sql = "select * from gps_gps where DATE_2 BETWEEN '{data_date_start}' AND '{data_date_end}'" \
+                .format(data_date_start=data_date_start, data_date_end=data_date_end)
+
 
         if not os.path.isdir(GPS_FILE_ROOT):
             os.mkdir(GPS_FILE_ROOT)

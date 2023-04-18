@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 from .models import *
@@ -37,8 +38,78 @@ class CustomUserChangeForm(UserChangeForm):
  # ======================================================
 from django import forms
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Div, HTML, Field
+from crispy_forms.layout import Layout, Div, HTML, Field, Fieldset
 from .models import CustomUser
+
+
+class UserInfoForm(forms.ModelForm):
+    username = forms.CharField(label="登入帳號", widget=forms.HiddenInput())
+    password0 = forms.CharField(label="舊密碼", required=False,
+                                widget=forms.PasswordInput(attrs={'placeholder': '請輸入登入密碼'}))
+    password1 = forms.CharField(label="新密碼", required=False,
+                                widget=forms.PasswordInput(attrs={'placeholder': '請輸入登入密碼'}))
+    password2 = forms.CharField(label="確認密碼", required=False,
+                                widget=forms.PasswordInput(attrs={'placeholder': '請再次輸入登入密碼'}))
+    tel1 = forms.CharField(label="連絡電話1", required=False,
+                           widget=forms.TextInput(attrs={'placeholder': '請輸入市話(含區碼)，例071234567'}))
+    tel2 = forms.CharField(label="連絡電話2", required=False,
+                           widget=forms.TextInput(attrs={'placeholder': '請輸入市話(含區碼)，例071234567'}))
+
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'mobile1', 'mobile2', 'password1', 'password2')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+        self.helper.form_show_errors = True
+
+        self.helper.layout = Layout(
+            Fieldset('基本資料',
+                 Div(
+                     Div('username', css_class="col-sm-4"),
+                     css_class='row'
+                 ),
+                Div(
+                    Div('mobile1', css_class="col-sm-4"),
+                    Div('mobile2', css_class="col-sm-4"),
+                    css_class='row p-3'
+                ),
+            ),
+            HTML('<hr>'),
+            Fieldset('密碼變更',
+                Div(
+                    Div('password0', css_class="col-sm-4"),
+                    css_class='row p-3'
+                ),
+                Div(
+                    Div('password1', css_class="col-sm-4"),
+                    Div('password2', css_class="col-sm-4"),
+                    css_class='row p-3'
+                ),
+            ),
+            HTML('<hr>'),
+        )
+
+    def clean(self):
+        cleaned_data = super(UserInfoForm, self).clean()
+        username = cleaned_data.get("username")
+        current_password = cleaned_data.get("password0")
+        password = cleaned_data.get("password1")
+        confirm_password = cleaned_data.get("password2")
+
+        if password != confirm_password:
+            raise forms.ValidationError(
+                "密碼與確認密碼不一致"
+            )
+
+        if current_password and not authenticate(username=username, password=current_password):
+            raise forms.ValidationError(
+                "舊密碼不正確"
+            )
+
 
 
 class CurrentCustomUserForm(forms.ModelForm):
@@ -55,7 +126,7 @@ class CurrentCustomUserForm(forms.ModelForm):
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'user_type', 'nickname', 'password', 'mobile1', 'mobile2',
+        fields = ('username', 'user_type', 'nickname', 'mobile1', 'mobile2',
                   'tel1', 'tel2', 'email1', 'email2', 'email3', 'email4', 'expired_date',
                   'send_sms', 'send_email', 'note', 'is_active', 'password1', 'password2')
         widgets = {
@@ -68,9 +139,7 @@ class CurrentCustomUserForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
         self.helper.form_show_errors = True
-        self.fields['password'].required = False
         self.fields['expired_date'].required = False
-        #self.helper.add_input(Submit('submit', submit_title))
 
         self.helper.layout = Layout(
             Div(

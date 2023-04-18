@@ -5,6 +5,7 @@ from users.views import *
 urlpatterns = [
     url(r'^detail/$', detail, name='user_detail'),
     url(r'^user_edit/$', user_edit, name='user_edit'),
+    url(r'^user_info/$', user_info, name='user_info'),
     url(r'^user_auth_api/$', user_auth_api, name='user_auth_api'),
     url(r'^postponed_expire_api/$', postponed_expire_api, name='postponed_expire_api'),
     url(r'^postpone_record_api/$', postpone_record_api, name='postpone_record_api'),

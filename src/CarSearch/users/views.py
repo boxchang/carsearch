@@ -12,7 +12,7 @@ from django.urls import reverse
 from bases.utils import get_ip_address
 from bases.views import index
 from jobs.models import FileJob
-from users.forms import CurrentCustomUserForm, CustomUser, LoginRecord
+from users.forms import CurrentCustomUserForm, CustomUser, LoginRecord, UserInfoForm
 from django.http import JsonResponse
 from django.db.models import Q
 from users.models import PostponeRecord, SearchRecord, CarDownloadRecord
@@ -470,6 +470,35 @@ def user_edit(request):
             user.save()
             return redirect('user_list')
     return render(request, template, locals())
+
+
+# Edit
+@login_required
+def user_info(request):
+    template = 'users/info.html'
+    pk = request.user.pk
+    member = CustomUser.objects.get(pk=pk)
+
+    if request.method == 'POST':
+        password = request.POST.get('password')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        mobile1 = request.POST.get('mobile1')
+        mobile2 = request.POST.get('mobile2')
+
+        form = UserInfoForm(request.POST, instance=member)
+
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.update_by = request.user
+            if password1 and password2:
+                user.set_password(password1)
+            user.save()
+            messages.info(request, '修改成功!')
+    else:
+        form = UserInfoForm(instance=member)
+    return render(request, template, locals())
+
 
 @login_required
 def user_list(request):

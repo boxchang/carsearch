@@ -19,8 +19,12 @@ from django.urls import path
 from django.conf.urls import include
 from django.urls import re_path as url
 from django.conf.urls.static import static
+from django.views.generic import RedirectView
+
 from bases.views import index, history
 from django.conf import settings
+
+favicon_view = RedirectView.as_view(url='/static/favicon.ico', permanent=True)
 
 urlpatterns = [
     url(r'^$', index, name='index'),
@@ -30,6 +34,7 @@ urlpatterns = [
     url(r'^jobs/', include('jobs.urls')),
     url(r'^history/', history, name='history'),
     url(r'^users/', include('users.urls')),
+    url(r'^favicon\.ico$', favicon_view),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
   + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

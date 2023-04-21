@@ -3,29 +3,95 @@
     更新資訊
 {% endblock %}
 {% block container %}
-    <div class="row">
-        <div class="col"></div>
-        <div class="col-8">
-            <table class="table table-striped">
-                <tr>
-                  <th>資料更新日期</th>
-                  <td>{{ update_time }}</td>
-                </tr>
-                <tr>
-                  <th>協尋數量</th>
-                  <td>{{ find_count }}</td>
-                </tr>
-                <tr>
-                  <th>新增數量</th>
-                  <td>{{ row_count }}</td>
-                </tr>
-                <tr>
-                  <th>當前資料總筆數</th>
-                  <td>{{ all_count }}</td>
-                </tr>
-            </table>
+<!-- Modal -->
+<div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ModalLabel">其他資訊</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+            <div class="col-12">
+                <table class="table table-hover table-striped table-bordered">
+                    <tr>
+                      <th>資料更新日期</th>
+                      <td>{{ update_time }}</td>
+                    </tr>
+                    <tr>
+                      <th>協尋數量</th>
+                      <td>{{ find_count }}</td>
+                    </tr>
+                    <tr>
+                      <th>新增數量</th>
+                      <td>{{ row_count }}</td>
+                    </tr>
+                    <tr>
+                      <th>當前資料總筆數</th>
+                      <td>{{ all_count }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <b>資料內容僅供參考，車籍資料請參考監理資料。</b><br>
+                            <b>待尋車號如註銷、失竊過久列為取消狀態。</b>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
-        <div class="col"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
     </div>
+  </div>
+</div>
+<p id="fit_rowcount_alert" class="lead" style="font-size: 1rem; margin-bottom: 0;">共<b>154</b>筆更新資料</p>
+<div id="car_data" class="table-responsive" style="height:400px; overflow:auto;">
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr class="text-center table-active">
+                <th scope="col">車號</th>
+                <th scope="col">車款</th>
+                <th scope="col">顏色</th>
+                <th scope="col">狀態</th>
+                <th scope="col">地址</th>
+            </tr>
+        </thead>
+        <tbody>
+            <style>
+                .data-row {
+                    cursor: pointer;
+                }
 
+                tr.fake_has_location_data > td {
+                    color: blue;
+                    font-weight: bold;
+                }
+
+                #car_data > table th,
+                #car_data > table td {
+                    white-space: nowrap;
+                }
+            </style>
+        <tr class="data-row fake_has_location_data" onclick="car.detail('TDU-9139');">
+            <td class="text-center">TDU-9139</td>
+            <td class="text-center">國瑞CAMRY</td>
+            <td class="text-center">黑</td>
+            <td class="text-center">狀態</td>
+            <td class="text-left">新北市林口區中山路530號7樓之1</td>
+        </tr>
+        <tr class="data-row fake_has_location_data" onclick="car.detail('TDM-8230');">
+            <td class="text-center">TDM-8230</td>
+            <td class="text-center">國瑞WISH</td>
+            <td class="text-center">黃</td>
+            <td class="text-center">狀態</td>
+            <td class="text-left"></td>
+        </tr>
+    </table>
+</div>
 {% endblock container %}
+{% block ready %}
+$("#Modal").modal('show');
+{% endblock ready %}

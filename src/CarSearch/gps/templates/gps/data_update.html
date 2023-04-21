@@ -9,50 +9,70 @@
         {{ form.errors }}
     </div>
 {% endif %}
-    <div style="height: 600px">
-        <fieldset class="scheduler-border pt-5 pb-5">
-            <legend class="scheduler-border">上傳定位</legend>
-            <form action="{% url 'gps_upload' %}" method="post" class="form-group font-weight-bold align-middle" id="car_form" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ upload_form.as_p }}
-                <div style="text-align: center;">
-                    <button type="submit" class="btn btn-primary" id="send" style="border-color: #28a745; background-color: #28a745; width: 100%;">點擊上傳定位資料(*.dbf)</button>
-                </div>
-            </form>
-        </fieldset>
-        <fieldset class="scheduler-border pb-5">
-            <legend class="scheduler-border">上傳定位照片</legend>
-            <form action="{% url 'gps_photo_upload' %}" method="post" class="form-group font-weight-bold align-middle" id="car_form" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ upload_form.as_p }}
-                <div style="text-align: center;">
-                    <button type="submit" class="btn btn-primary" id="send" style="border-color: #28a745; background-color: #28a745; width: 100%;">點擊上傳定位資料(*.zip)</button>
-                </div>
-            </form>
-        </fieldset>
-        <fieldset class="scheduler-border pb-5">
-            <legend class="scheduler-border">下載定位</legend>
-            <form action="{% url 'gps_download' %}" method="post" class="form-group font-weight-bold align-middle" id="car_form" enctype="multipart/form-data">
-                {% csrf_token %}
-                {% crispy download_form %}
-                <p>
-                <div style="text-align: center">
-                    <button type="submit" class="btn btn-primary" id="send" style="border-color: #007bff; background-color: #007bff; width: 100%;">點擊下載定位資料(*.dbf)</button>
-                </div>
-            </form>
-        </fieldset>
-        <fieldset class="scheduler-border pb-5">
-            <legend class="scheduler-border">刪除定位</legend>
-            <form action="{% url 'gps_delete' %}" method="post" class="form-group font-weight-bold align-middle" id="car_form" enctype="multipart/form-data">
-                {% csrf_token %}
-                {% crispy download_form %}
-                <p>
-                <div style="text-align: center">
-                    <button type="submit" class="btn btn-primary" id="send" style="border-color: #dc3545; background-color: #dc3545; width: 100%;" onclick="return confirm('確定要刪除資料?')">點擊刪除定位資料</button>
-                </div>
-            </form>
-        </fieldset>
+
+<div class="large-box" style="padding: 20px 0px;">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="gps_data" data-bs-toggle="tab" data-bs-target="#gps_data-pane" type="button" role="tab" aria-controls="gps_data-pane" aria-selected="true">定位資料</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="gps_photo" data-bs-toggle="tab" data-bs-target="#gps_photo-pane" type="button" role="tab" aria-controls="gps_photo-pane" aria-selected="false">定位照片</button>
+      </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade show active" id="gps_data-pane" role="tabpanel" aria-labelledby="gps_data" tabindex="0">
+          <div class="pt-4">
+            <fieldset class="scheduler-border pb-5">
+                <legend class="scheduler-border">上傳定位</legend>
+                <form action="{% url 'gps_upload' %}" method="post" class="form-group font-weight-bold align-middle" id="car_form" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ upload_form.as_p }}
+                    <div style="text-align: center;">
+                        <button type="submit" class="btn btn-primary" id="send" style="border-color: #28a745; background-color: #28a745; width: 100%;">點擊上傳定位資料(*.dbf)</button>
+                    </div>
+                </form>
+            </fieldset>
+
+            <fieldset class="scheduler-border pb-5">
+                <legend class="scheduler-border">下載定位</legend>
+                <form action="{% url 'gps_download' %}" method="post" class="form-group font-weight-bold align-middle" id="car_form" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% crispy download_form %}
+                    <p>
+                    <div style="text-align: center">
+                        <button type="submit" class="btn btn-primary" id="send" style="border-color: #007bff; background-color: #007bff; width: 100%;">點擊下載定位資料(*.dbf)</button>
+                    </div>
+                </form>
+            </fieldset>
+            <fieldset class="scheduler-border pb-5">
+                <legend class="scheduler-border">刪除定位</legend>
+                <form action="{% url 'gps_delete' %}" method="post" class="form-group font-weight-bold align-middle" id="car_form" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% crispy download_form %}
+                    <p>
+                    <div style="text-align: center">
+                        <button type="submit" class="btn btn-primary" id="send" style="border-color: #dc3545; background-color: #dc3545; width: 100%;" onclick="return confirm('確定要刪除資料?')">點擊刪除定位資料</button>
+                    </div>
+                </form>
+            </fieldset>
+          </div>
+      </div>
+      <div class="tab-pane fade" id="gps_photo-pane" role="tabpanel" aria-labelledby="gps_photo" tabindex="1">
+          <div class="pt-4">
+            <fieldset class="scheduler-border pb-5">
+                <legend class="scheduler-border">上傳定位照片</legend>
+                <form action="{% url 'gps_photo_upload' %}" method="post" class="form-group font-weight-bold align-middle" id="car_form" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ upload_form.as_p }}
+                    <div style="text-align: center;">
+                        <button type="submit" class="btn btn-primary" id="send" style="border-color: #28a745; background-color: #28a745; width: 100%;">點擊上傳定位資料(*.zip)</button>
+                    </div>
+                </form>
+            </fieldset>
+          </div>
+      </div>
     </div>
+</div>
 {% endblock container %}
 {% block js %}
     <script>

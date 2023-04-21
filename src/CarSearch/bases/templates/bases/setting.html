@@ -1,0 +1,35 @@
+{% extends 'bases/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+    系統設定
+{% endblock %}
+{% block container %}
+<div class="large-box" style="padding: 20px 0px;">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="data1" data-bs-toggle="tab" data-bs-target="#data1-pane" type="button" role="tab" aria-controls="data1-pane" aria-selected="true">Email參數</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="data2" data-bs-toggle="tab" data-bs-target="#data2-pane" type="button" role="tab" aria-controls="data2-pane" aria-selected="false">簡訊參數</button>
+      </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade show active" id="data1-pane" role="tabpanel" aria-labelledby="data1" tabindex="0">
+          <div class="pt-4">
+            <form method="post" action="{% url 'setting' %}" id="user_edit">
+              {% csrf_token %}
+              <div class="pb-4" style="text-align: left;">
+                  <input class="btn btn-primary" type="submit" value="儲存" />
+              </div>
+              {% crispy form %}
+            </form>
+          </div>
+      </div>
+      <div class="tab-pane fade" id="data2-pane" role="tabpanel" aria-labelledby="data2" tabindex="1">
+          <div class="pt-4">
+              DATA2
+          </div>
+      </div>
+    </div>
+</div>
+{% endblock container %}

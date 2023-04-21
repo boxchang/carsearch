@@ -21,14 +21,15 @@ from django.urls import re_path as url
 from django.conf.urls.static import static
 from django.views.generic import RedirectView
 
-from bases.views import index, history
+from bases.views import index, history, setting
 from django.conf import settings
 
 favicon_view = RedirectView.as_view(url='/static/favicon.ico', permanent=True)
 
 urlpatterns = [
     url(r'^$', index, name='index'),
-    path('admin/', admin.site.urls),
+    url(r'^setting/', setting, name='setting'),
+    url('admin/', admin.site.urls),
     url(r'^car/', include('car.urls')),
     url(r'^gps/', include('gps.urls')),
     url(r'^jobs/', include('jobs.urls')),

@@ -2,7 +2,13 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.db import connection
 
+from bases.forms import SettingForm
 from car.models import Car
+
+@login_required
+def setting(request):
+    form = SettingForm()
+    return render(request, 'bases/setting.html', locals())
 
 
 @login_required

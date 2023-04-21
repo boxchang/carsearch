@@ -53,99 +53,99 @@
 <body>
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">尋車助手Logo</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+    <div class="pr-5"><a class="navbar-brand" href="#">尋車助手Logo</a></div>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url 'index' %}">更新資訊</a>
+            <div class="mx-auto pt-2" style="width: 500px;">
+                <form class="d-flex" role="search" method="POST" action="{% url 'car_search' %}">
+                    {% csrf_token %}
+                    <select name="car_status" class="form-select me-2" id="car_status">
+                        <option value="" {{ request.session.car_status_all }}>---------</option>
+                        <option value="待  尋" {{ request.session.car_status_find }}>待 尋</option>
+                        <option value="取  消" {{ request.session.car_status_cancel }}>取 消</option>
+                    </select>
+                    <input class="form-control me-2" type="search" name="keyword" placeholder="車牌或地址搜尋" aria-label="Search" value="{{ request.session.keyword }}">
+                    <button class="btn btn-outline-success" type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+        </li>
+        <li>
+            <div class="pt-2 pl-4 pr-4" style="text-align: right">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#searchModal">
+                  進階搜尋
+                </button>
+                <form role="search" method="POST" action="{% url 'car_search' %}" id="search_form">
+                {% csrf_token %}
+                <!-- Modal -->
+                <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="ModalLabel">進階搜尋</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="row">
+                            <div class="col">
+                                <div class="row p-2">
+                                    <div class="col-4" style="text-align: center">狀　　態：</div>
+                                    <div class="col-8">
+                                        <select name="car_status" class="form-select" id="car_status">
+                                            <option value="" {{ request.session.car_status_all }}>---------</option>
+                                            <option value="待  尋" {{ request.session.car_status_find }}>待 尋</option>
+                                            <option value="取  消" {{ request.session.car_status_cancel }}>取 消</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row p-2">
+                                    <div class="col-4" style="text-align: center">車牌&地址：</div>
+                                    <div class="col-8"><input class="form-control me-2" type="search" name="keyword" placeholder="車牌或地址搜尋" aria-label="s_keyword" value="{{ request.session.keyword }}"></div>
+                                </div>
+                                <div class="row p-2">
+                                    <div class="col-4" style="text-align: center">顏　　色：</div>
+                                    <div class="col-8"><input class="form-control me-2" type="search" name="carcolor" placeholder="顏色" aria-label="s_carcolor" value="{{ request.session.carcolor }}"></div>
+                                </div>
+                                <div class="row p-2">
+                                    <div class="col-4" style="text-align: center">年　　份：</div>
+                                    <div class="col-8"><input class="form-control me-2" type="search" name="carage" placeholder="年份" aria-label="s_carage" value="{{ request.session.carage }}"></div>
+                                </div>
+                                <div class="row p-2">
+                                    <div class="col-4" style="text-align: center">動保迄日：</div>
+                                    <div class="col-4"><input class="form-control me-2 datepicker" type="search" name="enddate_start" id="enddate_start" placeholder="動保迄日(起)" aria-label="s_enddate" value="{{ request.session.enddate_start }}"></div>
+                                    <div class="col-4"><input class="form-control me-2 datepicker" type="search" name="enddate_end" id="enddate_end" placeholder="動保迄日(迄)" aria-label="s_enddate" value="{{ request.session.enddate_end }}"></div>
+                                </div>
+                                <div class="row p-2">
+                                    <div class="col-4" style="text-align: center">異動日期：</div>
+                                    <div class="col-4"><input class="form-control me-2 datepicker" type="search" name="chgdate_start" id="chgdate_start" placeholder="異動日期(起)" aria-label="s_chgdate" value="{{ request.session.chgdate_start }}"></div>
+                                    <div class="col-4"><input class="form-control me-2 datepicker" type="search" name="chgdate_end" id="chgdate_end" placeholder="異動日期(迄)" aria-label="s_chgdate" value="{{ request.session.chgdate_end }}"></div>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                        <button type="button" class="btn btn-primary" onclick="search_form()">查詢</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                </form>
+
+            </div>
         </li>
       </ul>
     </div>
-    <div class="mx-auto" style="width: 500px;">
-        <form class="d-flex" role="search" method="POST" action="{% url 'car_search' %}">
-            {% csrf_token %}
-            <select name="car_status" class="form-select me-2" id="car_status">
-                <option value="" {{ request.session.car_status_all }}>---------</option>
-                <option value="待  尋" {{ request.session.car_status_find }}>待 尋</option>
-                <option value="取  消" {{ request.session.car_status_cancel }}>取 消</option>
-            </select>
-            <input class="form-control me-2" type="search" name="keyword" placeholder="車牌或地址搜尋" aria-label="Search" value="{{ request.session.keyword }}">
-            <button class="btn btn-outline-success" type="submit"><i class="fas fa-search"></i></button>
-        </form>
-    </div>
-    <div style="padding-left: 5px;padding-right: 50px">
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#searchModal">
-          進階搜尋
-        </button>
-        <form role="search" method="POST" action="{% url 'car_search' %}" id="search_form">
-        {% csrf_token %}
-        <!-- Modal -->
-        <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="ModalLabel">進階搜尋</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <div class="row">
-                    <div class="col">
-                        <div class="row p-2">
-                            <div class="col-4" style="text-align: center">狀　　態：</div>
-                            <div class="col-8">
-                                <select name="car_status" class="form-select" id="car_status">
-                                    <option value="" {{ request.session.car_status_all }}>---------</option>
-                                    <option value="待  尋" {{ request.session.car_status_find }}>待 尋</option>
-                                    <option value="取  消" {{ request.session.car_status_cancel }}>取 消</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row p-2">
-                            <div class="col-4" style="text-align: center">車牌&地址：</div>
-                            <div class="col-8"><input class="form-control me-2" type="search" name="keyword" placeholder="車牌或地址搜尋" aria-label="s_keyword" value="{{ request.session.keyword }}"></div>
-                        </div>
-                        <div class="row p-2">
-                            <div class="col-4" style="text-align: center">顏　　色：</div>
-                            <div class="col-8"><input class="form-control me-2" type="search" name="carcolor" placeholder="顏色" aria-label="s_carcolor" value="{{ request.session.carcolor }}"></div>
-                        </div>
-                        <div class="row p-2">
-                            <div class="col-4" style="text-align: center">年　　份：</div>
-                            <div class="col-8"><input class="form-control me-2" type="search" name="carage" placeholder="年份" aria-label="s_carage" value="{{ request.session.carage }}"></div>
-                        </div>
-                        <div class="row p-2">
-                            <div class="col-4" style="text-align: center">動保迄日：</div>
-                            <div class="col-4"><input class="form-control me-2 datepicker" type="search" name="enddate_start" id="enddate_start" placeholder="動保迄日(起)" aria-label="s_enddate" value="{{ request.session.enddate_start }}"></div>
-                            <div class="col-4"><input class="form-control me-2 datepicker" type="search" name="enddate_end" id="enddate_end" placeholder="動保迄日(迄)" aria-label="s_enddate" value="{{ request.session.enddate_end }}"></div>
-                        </div>
-                        <div class="row p-2">
-                            <div class="col-4" style="text-align: center">異動日期：</div>
-                            <div class="col-4"><input class="form-control me-2 datepicker" type="search" name="chgdate_start" id="chgdate_start" placeholder="異動日期(起)" aria-label="s_chgdate" value="{{ request.session.chgdate_start }}"></div>
-                            <div class="col-4"><input class="form-control me-2 datepicker" type="search" name="chgdate_end" id="chgdate_end" placeholder="異動日期(迄)" aria-label="s_chgdate" value="{{ request.session.chgdate_end }}"></div>
-                        </div>
-                    </div>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
-                <button type="button" class="btn btn-primary" onclick="search_form()">查詢</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        </form>
-    </div>
-
-
-
-    <div class="dropdown p-2">
+    <div class="dropdown">
       <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         {{ user.username }}
       </button>
       <ul class="dropdown-menu dropdown-menu-dark">
+        <li><a class="dropdown-item" href="{% url 'index' %}">更新資訊</a></li>
         <li><a class="dropdown-item" href="{% url 'job_detail' %}">查詢紀錄</a></li>
         <li><a class="dropdown-item" href="{% url 'car_data_update' %}">車單資料</a></li>
         <li><a class="dropdown-item" href="{% url 'gps_data_update' %}">定位資料</a></li>
